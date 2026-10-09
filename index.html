@@ -89,20 +89,20 @@
                 <div>
                     <div class="px-3 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider sidebar-label">DỮ LIỆU & CÀI ĐẶT</div>
                     <div class="space-y-1">
-                        <button onclick="exportDataJSON()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 text-gray-300 hover:text-white">
+                        <button onclick="window.exportDataJSON()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 text-gray-300 hover:text-white">
                             <i class="fas fa-file-export w-5 text-center text-cyan-400"></i>
                             <span class="nav-text">Sao lưu (Export JSON)</span>
                         </button>
                         <label class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 text-gray-300 hover:text-white cursor-pointer">
                             <i class="fas fa-file-import w-5 text-center text-indigo-400"></i>
                             <span class="nav-text">Khôi phục (Import JSON)</span>
-                            <input type="file" id="import-json-file" accept=".json" class="hidden" onchange="importDataJSON(event)">
+                            <input type="file" id="import-json-file" accept=".json" class="hidden" onchange="window.importDataJSON(event)">
                         </label>
-                        <button onclick="showPersistentStorageInfo()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 text-gray-300 hover:text-white">
+                        <button onclick="window.showPersistentStorageInfo()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 text-gray-300 hover:text-white">
                             <i class="fas fa-question-circle w-5 text-center text-amber-400"></i>
                             <span class="nav-text">Lưu dữ liệu vĩnh viễn</span>
                         </button>
-                        <button onclick="resetToSampleData()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 text-rose-400 hover:text-rose-300">
+                        <button onclick="window.resetToSampleData()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 text-rose-400 hover:text-rose-300">
                             <i class="fas fa-undo w-5 text-center"></i>
                             <span class="nav-text">Đặt lại dữ liệu mẫu</span>
                         </button>
@@ -115,7 +115,7 @@
         <main class="flex-1 flex flex-col min-w-0 bg-gray-50">
             <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm">
                 <h1 id="page-title" class="text-xl font-bold text-gray-800">Quản Lý Khách Hàng & Dịch Vụ</h1>
-                <button onclick="openCustomerModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 shadow-sm transition">
+                <button onclick="window.openCustomerModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 shadow-sm transition">
                     <i class="fas fa-user-plus"></i>
                     <span>Thêm Khách Hàng</span>
                 </button>
@@ -161,7 +161,7 @@
                     <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between">
                         <div class="relative w-full md:w-96">
                             <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input type="text" id="search-customer" oninput="renderCustomers()" placeholder="Tìm theo Tên, SĐT, Email..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <input type="text" id="search-customer" oninput="window.renderCustomers()" placeholder="Tìm theo Tên, SĐT, Email..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                         </div>
                         <div class="text-sm text-gray-500">
                             Hiển thị: <span id="customer-count" class="font-bold text-gray-800">0</span> khách hàng
@@ -175,7 +175,7 @@
                     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                         <div class="p-4 border-b border-gray-200 flex justify-between items-center">
                             <h3 class="font-bold text-gray-800">Tất Cả Tài Khoản Dịch Vụ</h3>
-                            <input type="text" id="search-account" oninput="renderAccountsTab()" placeholder="Tìm tài khoản..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
+                            <input type="text" id="search-account" oninput="window.renderAccountsTab()" placeholder="Tìm tài khoản..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm">
@@ -228,9 +228,9 @@
         <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl relative">
             <div class="flex justify-between items-center mb-4 border-b pb-3">
                 <h3 id="modal-customer-title" class="text-lg font-bold text-gray-800">Thêm Khách Hàng</h3>
-                <button onclick="closeCustomerModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-lg"></i></button>
+                <button onclick="window.closeCustomerModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-lg"></i></button>
             </div>
-            <form id="form-customer" onsubmit="saveCustomer(event)" class="space-y-4">
+            <form id="form-customer" onsubmit="window.saveCustomer(event)" class="space-y-4">
                 <input type="hidden" id="cust-id">
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1">Tên Khách Hàng <span class="text-rose-500">*</span></label>
@@ -250,7 +250,7 @@
                 </div>
                 <div id="cust-error" class="text-xs text-rose-500 hidden"></div>
                 <div class="flex justify-end space-x-3 pt-3 border-t">
-                    <button type="button" onclick="closeCustomerModal()" class="px-4 py-2 border rounded-lg text-sm text-gray-600">Hủy</button>
+                    <button type="button" onclick="window.closeCustomerModal()" class="px-4 py-2 border rounded-lg text-sm text-gray-600">Hủy</button>
                     <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm">Lưu</button>
                 </div>
             </form>
@@ -262,9 +262,9 @@
         <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl relative">
             <div class="flex justify-between items-center mb-4 border-b pb-3">
                 <h3 id="modal-service-title" class="text-lg font-bold text-gray-800">Thêm Dịch Vụ</h3>
-                <button onclick="closeServiceModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-lg"></i></button>
+                <button onclick="window.closeServiceModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-lg"></i></button>
             </div>
-            <form id="form-service" onsubmit="saveService(event)" class="space-y-4">
+            <form id="form-service" onsubmit="window.saveService(event)" class="space-y-4">
                 <input type="hidden" id="service-cust-id">
                 <input type="hidden" id="service-id">
 
@@ -275,7 +275,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Hình Thức Đăng Nhập</label>
-                        <select id="service-login-type" onchange="toggleLoginTypeFields()" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
+                        <select id="service-login-type" onchange="window.toggleLoginTypeFields()" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
                             <option value="normal">Mật khẩu thường</option>
                             <option value="google">Google Login</option>
                         </select>
@@ -296,7 +296,7 @@
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Mật Khẩu</label>
                         <div class="relative">
                             <input type="password" id="service-password" placeholder="••••••••" class="w-full px-3 py-2 border rounded-lg text-sm pr-9 focus:ring-emerald-500">
-                            <button type="button" onclick="toggleInputPasswordVisibility('service-password', this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 p-1">
+                            <button type="button" onclick="window.toggleInputPasswordVisibility('service-password', this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 p-1">
                                 <i class="fas fa-eye text-xs"></i>
                             </button>
                         </div>
@@ -306,7 +306,7 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Loại Thời Hạn</label>
-                        <select id="service-type" onchange="toggleExpiryField()" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
+                        <select id="service-type" onchange="window.toggleExpiryField()" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
                             <option value="fixed">Có Thời Hạn</option>
                             <option value="lifetime">Vĩnh Viễn</option>
                         </select>
@@ -332,7 +332,7 @@
                 </div>
 
                 <div class="flex justify-end space-x-3 pt-3 border-t">
-                    <button type="button" onclick="closeServiceModal()" class="px-4 py-2 border rounded-lg text-sm text-gray-600">Hủy</button>
+                    <button type="button" onclick="window.closeServiceModal()" class="px-4 py-2 border rounded-lg text-sm text-gray-600">Hủy</button>
                     <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm">Lưu Dịch Vụ</button>
                 </div>
             </form>
@@ -349,49 +349,58 @@
         const STORAGE_KEY = 'CRM_LOCAL_CUSTOMERS_DATA_V2';
         let customers = [];
         let visiblePasswords = {}; 
+        let isSaving = false;
 
-        // Khởi tạo
-        document.addEventListener('DOMContentLoaded', () => {
-            loadDataFromStorage();
-            setupSidebarToggle();
-            renderCustomers();
-            updateDashboardStats();
-        });
+        // Định nghĩa toàn bộ hàm trên window để đảm bảo global scope
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const targetTab = document.getElementById(`tab-${tabId}`);
+            if (targetTab) targetTab.classList.remove('hidden');
 
-        function loadDataFromStorage() {
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-emerald-600', 'text-white', 'shadow-md');
+                el.classList.add('hover:bg-gray-800', 'text-gray-300');
+            });
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) activeNav.classList.add('bg-emerald-600', 'text-white', 'shadow-md');
+            
+            if (tabId === 'accounts') window.renderAccountsTab();
+            if (tabId === 'debts') window.renderDebtsTab();
+        };
+
+        window.loadDataFromStorage = function() {
             try {
                 const dataStr = localStorage.getItem(STORAGE_KEY);
                 if (dataStr) {
                     customers = JSON.parse(dataStr);
+                    if (!Array.isArray(customers)) customers = [];
                 }
             } catch (e) {
                 console.error("Lỗi đọc dữ liệu", e);
                 customers = [];
             }
-        }
+        };
 
-        function saveDataToStorage() {
+        window.saveDataToStorage = function() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(customers));
-            updateDashboardStats();
-        }
+            window.updateDashboardStats();
+        };
 
-        // Copy Zalo Format - Đã bỏ tag trạng thái [Đã TT] / [Chưa TT]
-        function copyZaloFormat(custId) {
+        window.copyZaloFormat = function(custId) {
             const c = customers.find(x => x.id === custId);
             if (!c) return;
 
             let msg = `📌 THÔNG TIN DỊCH VỤ - ${c.name.toUpperCase()}\n📞 SĐT: ${c.phone}\n-------------------\n`;
-            if (c.services.length === 0) {
+            if (!c.services || c.services.length === 0) {
                 msg += `(Chưa có dịch vụ nào)`;
             } else {
                 c.services.forEach(s => {
                     const urlPart = s.url ? ` (${s.url})` : '';
-                    msg += `└ 🔑 ${s.name}${urlPart}\n - TK:${s.account || 'Chưa cập nhật'}\n`;
+                    msg += `└ 🔑 ${s.name}${urlPart}\n - TK: ${s.account || 'Chưa cập nhật'}\n`;
                     msg += (s.loginType === 'google') ? ` - Đăng nhập: Google Login\n` : ` - MK/Xác thực: ${s.password || 'Chưa có'}\n`;
                 });
             }
 
-            // Fallback Offline Textarea Method
             const textArea = document.createElement("textarea");
             textArea.value = msg;
             textArea.style.position = "fixed"; 
@@ -401,14 +410,14 @@
             
             try {
                 document.execCommand('copy');
-                showToast("Đã copy mẫu Zalo thành công!");
+                window.showToast("Đã copy mẫu Zalo thành công!");
             } catch (err) {
-                showToast("Trình duyệt không hỗ trợ copy tự động!", false);
+                window.showToast("Trình duyệt không hỗ trợ copy tự động!", false);
             }
             document.body.removeChild(textArea);
-        }
+        };
 
-        function exportDataJSON() {
+        window.exportDataJSON = function() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(customers, null, 2));
             const dl = document.createElement('a');
             dl.setAttribute("href", dataStr);
@@ -416,10 +425,10 @@
             document.body.appendChild(dl);
             dl.click();
             dl.remove();
-            showToast("Đã xuất file JSON!");
-        }
+            window.showToast("Đã xuất file JSON!");
+        };
 
-        function importDataJSON(event) {
+        window.importDataJSON = function(event) {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
@@ -428,9 +437,9 @@
                     const imported = JSON.parse(e.target.result);
                     if (Array.isArray(imported)) {
                         customers = imported;
-                        saveDataToStorage();
-                        renderCustomers();
-                        showToast("Đã khôi phục dữ liệu!");
+                        window.saveDataToStorage();
+                        window.renderCustomers();
+                        window.showToast("Đã khôi phục dữ liệu!");
                     }
                 } catch (err) {
                     alert("Lỗi file JSON: " + err.message);
@@ -438,65 +447,43 @@
             };
             reader.readAsText(file);
             event.target.value = '';
-        }
+        };
 
-        function resetToSampleData() {
+        window.resetToSampleData = function() {
             if (confirm("Đặt lại dữ liệu sẽ xóa toàn bộ danh sách hiện tại. Bạn chắc chắn?")) {
                 customers = [];
-                saveDataToStorage();
-                renderCustomers();
-                showToast("Đã làm sạch dữ liệu!");
+                window.saveDataToStorage();
+                window.renderCustomers();
+                window.showToast("Đã làm sạch dữ liệu!");
             }
-        }
+        };
 
-        function showPersistentStorageInfo() {
+        window.showPersistentStorageInfo = function() {
             alert("Dữ liệu được lưu vĩnh viễn trong Local Storage của trình duyệt offline.");
-        }
+        };
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-
-            document.querySelectorAll('.nav-item').forEach(el => {
-                el.classList.remove('bg-emerald-600', 'text-white', 'shadow-md');
-                el.classList.add('hover:bg-gray-800', 'text-gray-300');
-            });
-            document.getElementById(`nav-${tabId}`).classList.add('bg-emerald-600', 'text-white', 'shadow-md');
-            
-            if (tabId === 'accounts') renderAccountsTab();
-            if (tabId === 'debts') renderDebtsTab();
-        }
-
-        function setupSidebarToggle() {
-            document.getElementById('toggle-sidebar-btn').addEventListener('click', () => {
-                const sb = document.getElementById('sidebar');
-                sb.classList.toggle('w-64'); sb.classList.toggle('w-20');
-                document.querySelectorAll('.nav-text, .sidebar-label, .logo-text').forEach(el => el.classList.toggle('hidden'));
-            });
-        }
-
-        function showToast(msg, isSuccess = true) {
+        window.showToast = function(msg, isSuccess = true) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-msg').innerText = msg;
             document.getElementById('toast-icon').className = isSuccess ? "fas fa-check-circle text-emerald-400" : "fas fa-exclamation-circle text-rose-400";
             toast.classList.remove('hidden');
             setTimeout(() => toast.classList.add('hidden'), 3000);
-        }
+        };
 
-        function toggleInputPasswordVisibility(id, btn) {
+        window.toggleInputPasswordVisibility = function(id, btn) {
             const input = document.getElementById(id);
             const icon = btn.querySelector('i');
             if (input.type === 'password') { input.type = 'text'; icon.className = 'fas fa-eye-slash text-xs'; }
             else { input.type = 'password'; icon.className = 'fas fa-eye text-xs'; }
-        }
+        };
 
-        function togglePasswordDisplay(serviceId) {
+        window.togglePasswordDisplay = function(serviceId) {
             visiblePasswords[serviceId] = !visiblePasswords[serviceId];
-            renderCustomers();
-            if (!document.getElementById('tab-accounts').classList.contains('hidden')) renderAccountsTab();
-        }
+            window.renderCustomers();
+            if (!document.getElementById('tab-accounts').classList.contains('hidden')) window.renderAccountsTab();
+        };
 
-        function openCustomerModal(custId = null) {
+        window.openCustomerModal = function(custId = null) {
             document.getElementById('cust-error').classList.add('hidden');
             if (custId) {
                 const c = customers.find(x => x.id === custId);
@@ -512,14 +499,14 @@
                 document.getElementById('cust-id').value = '';
             }
             document.getElementById('modal-customer').classList.remove('hidden');
-        }
+        };
 
-        function closeCustomerModal() { document.getElementById('modal-customer').classList.add('hidden'); }
+        window.closeCustomerModal = function() { document.getElementById('modal-customer').classList.add('hidden'); };
 
-        function saveCustomer(event) {
+        window.saveCustomer = function(event) {
             event.preventDefault();
-            const btn = event.target.querySelector('button[type="submit"]');
-            btn.disabled = true;
+            if (isSaving) return;
+            isSaving = true;
 
             const id = document.getElementById('cust-id').value;
             const name = document.getElementById('cust-name').value.trim();
@@ -529,67 +516,89 @@
             const errEl = document.getElementById('cust-error');
 
             const dupPhone = customers.find(c => c.phone === phone && c.id !== id);
-            if (dupPhone) { errEl.innerText = `SĐT đã tồn tại ở khách "${dupPhone.name}"`; errEl.classList.remove('hidden'); btn.disabled = false; return; }
+            if (dupPhone) { 
+                errEl.innerText = `SĐT đã tồn tại ở khách "${dupPhone.name}"`; 
+                errEl.classList.remove('hidden'); 
+                isSaving = false;
+                return; 
+            }
 
             const dupEmail = customers.find(c => c.email.toLowerCase() === email.toLowerCase() && c.id !== id);
-            if (dupEmail) { errEl.innerText = `Email đã tồn tại ở khách "${dupEmail.name}"`; errEl.classList.remove('hidden'); btn.disabled = false; return; }
+            if (dupEmail) { 
+                errEl.innerText = `Email đã tồn tại ở khách "${dupEmail.name}"`; 
+                errEl.classList.remove('hidden'); 
+                isSaving = false;
+                return; 
+            }
 
             if (id) {
                 const idx = customers.findIndex(c => c.id === id);
-                customers[idx] = { ...customers[idx], name, phone, email, note };
+                if (idx !== -1) {
+                    customers[idx] = { ...customers[idx], name, phone, email, note };
+                }
             } else {
                 customers.unshift({ id: 'C_' + Date.now(), name, phone, email, note, services: [] });
             }
 
-            saveDataToStorage(); renderCustomers(); closeCustomerModal();
-            showToast(id ? "Đã sửa thành công!" : "Đã thêm khách hàng!");
-            setTimeout(() => { btn.disabled = false; }, 500);
-        }
+            window.saveDataToStorage(); 
+            window.renderCustomers(); 
+            window.closeCustomerModal();
+            window.showToast(id ? "Đã sửa thành công!" : "Đã thêm khách hàng!");
+            isSaving = false;
+        };
 
-        function deleteCustomer(id) {
+        window.deleteCustomer = function(id) {
             if (confirm("Xóa khách hàng và toàn bộ dịch vụ của họ?")) {
                 customers = customers.filter(c => c.id !== id);
-                saveDataToStorage(); renderCustomers(); showToast("Đã xóa!");
+                window.saveDataToStorage(); 
+                window.renderCustomers(); 
+                window.showToast("Đã xóa!");
             }
-        }
+        };
 
-        function toggleExpiryField() {
-            document.getElementById('field-expiry-container').classList.toggle('hidden', document.getElementById('service-type').value === 'lifetime');
-        }
+        window.toggleExpiryField = function() {
+            const isLifetime = document.getElementById('service-type').value === 'lifetime';
+            document.getElementById('field-expiry-container').classList.toggle('hidden', isLifetime);
+        };
 
-        function toggleLoginTypeFields() {
-            document.getElementById('field-password-container').classList.toggle('hidden', document.getElementById('service-login-type').value === 'google');
-        }
+        window.toggleLoginTypeFields = function() {
+            const isGoogle = document.getElementById('service-login-type').value === 'google';
+            document.getElementById('field-password-container').classList.toggle('hidden', isGoogle);
+        };
 
-        function openServiceModal(custId, serviceId = null) {
+        window.openServiceModal = function(custId, serviceId = null) {
             document.getElementById('service-cust-id').value = custId;
             document.getElementById('service-id').value = serviceId || '';
             if (serviceId) {
-                const s = customers.find(x => x.id === custId).services.find(s => s.id === serviceId);
-                document.getElementById('modal-service-title').innerText = "Sửa Dịch Vụ";
-                document.getElementById('service-name').value = s.name;
-                document.getElementById('service-url').value = s.url || '';
-                document.getElementById('service-login-type').value = s.loginType || 'normal';
-                document.getElementById('service-account').value = s.account || '';
-                document.getElementById('service-password').value = s.password || '';
-                document.getElementById('service-type').value = s.serviceType || 'fixed';
-                document.getElementById('service-expiry').value = s.expiryDate || '';
-                document.getElementById('service-price').value = s.price || 0;
-                document.getElementById('service-is-paid').value = s.isPaid ? "true" : "false";
+                const c = customers.find(x => x.id === custId);
+                const s = c ? c.services.find(s => s.id === serviceId) : null;
+                if (s) {
+                    document.getElementById('modal-service-title').innerText = "Sửa Dịch Vụ";
+                    document.getElementById('service-name').value = s.name;
+                    document.getElementById('service-url').value = s.url || '';
+                    document.getElementById('service-login-type').value = s.loginType || 'normal';
+                    document.getElementById('service-account').value = s.account || '';
+                    document.getElementById('service-password').value = s.password || '';
+                    document.getElementById('service-type').value = s.serviceType || 'fixed';
+                    document.getElementById('service-expiry').value = s.expiryDate || '';
+                    document.getElementById('service-price').value = s.price || 0;
+                    document.getElementById('service-is-paid').value = s.isPaid ? "true" : "false";
+                }
             } else {
                 document.getElementById('modal-service-title').innerText = "Thêm Dịch Vụ";
                 document.getElementById('form-service').reset();
             }
-            toggleExpiryField(); toggleLoginTypeFields();
+            window.toggleExpiryField(); 
+            window.toggleLoginTypeFields();
             document.getElementById('modal-service').classList.remove('hidden');
-        }
+        };
 
-        function closeServiceModal() { document.getElementById('modal-service').classList.add('hidden'); }
+        window.closeServiceModal = function() { document.getElementById('modal-service').classList.add('hidden'); };
 
-        function saveService(event) {
+        window.saveService = function(event) {
             event.preventDefault();
-            const btn = event.target.querySelector('button[type="submit"]');
-            btn.disabled = true;
+            if (isSaving) return;
+            isSaving = true;
 
             const custId = document.getElementById('service-cust-id').value;
             const sId = document.getElementById('service-id').value;
@@ -610,34 +619,48 @@
             };
 
             const c = customers.find(x => x.id === custId);
-            if (sId) {
-                const idx = c.services.findIndex(s => s.id === sId);
-                c.services[idx] = serviceData;
-            } else {
-                c.services.push(serviceData);
+            if (c) {
+                if (!c.services) c.services = [];
+                if (sId) {
+                    const idx = c.services.findIndex(s => s.id === sId);
+                    if (idx !== -1) c.services[idx] = serviceData;
+                } else {
+                    c.services.push(serviceData);
+                }
             }
 
-            saveDataToStorage(); renderCustomers(); closeServiceModal(); showToast("Đã lưu dịch vụ!");
-            setTimeout(() => { btn.disabled = false; }, 500);
-        }
+            window.saveDataToStorage(); 
+            window.renderCustomers(); 
+            window.closeServiceModal(); 
+            window.showToast("Đã lưu dịch vụ!");
+            isSaving = false;
+        };
 
-        function deleteService(cId, sId) {
+        window.deleteService = function(cId, sId) {
             if (confirm("Xóa dịch vụ này?")) {
                 const c = customers.find(x => x.id === cId);
-                c.services = c.services.filter(s => s.id !== sId);
-                saveDataToStorage(); renderCustomers(); showToast("Đã xóa dịch vụ!");
+                if (c && c.services) {
+                    c.services = c.services.filter(s => s.id !== sId);
+                    window.saveDataToStorage(); 
+                    window.renderCustomers(); 
+                    window.showToast("Đã xóa dịch vụ!");
+                }
             }
-        }
+        };
 
-        function renderCustomers() {
-            const search = document.getElementById('search-customer').value.toLowerCase().trim();
+        window.renderCustomers = function() {
+            const searchEl = document.getElementById('search-customer');
+            const search = searchEl ? searchEl.value.toLowerCase().trim() : '';
             const container = document.getElementById('customer-list');
+            if (!container) return;
             container.innerHTML = '';
             
             const filtered = customers.filter(c => c.name.toLowerCase().includes(search) || c.phone.includes(search) || c.email.toLowerCase().includes(search));
-            document.getElementById('customer-count').innerText = filtered.length;
+            const countEl = document.getElementById('customer-count');
+            if (countEl) countEl.innerText = filtered.length;
 
             filtered.forEach(c => {
+                if (!c.services) c.services = [];
                 const totalDebt = c.services.filter(s => !s.isPaid).reduce((sum, s) => sum + (Number(s.price) || 0), 0);
                 const html = `
                     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
@@ -645,15 +668,16 @@
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center">${c.name.charAt(0)}</div>
                                 <div>
-                                    <h2 class="font-bold text-gray-800 inline-block mr-2">${c.name}</h2>${totalDebt > 0 ? `<span class="bg-rose-100 text-rose-700 text-xs px-2 py-0.5 rounded-full font-bold">Nợ: ${totalDebt.toLocaleString()} đ</span>` : ''}
+                                    <h2 class="font-bold text-gray-800 inline-block mr-2">${c.name}</h2>
+                                    ${totalDebt > 0 ? `<span class="bg-rose-100 text-rose-700 text-xs px-2 py-0.5 rounded-full font-bold">Nợ: ${totalDebt.toLocaleString()} đ</span>` : ''}
                                     <p class="text-xs text-gray-500 mt-1"><i class="fas fa-phone mr-1"></i>${c.phone} | <i class="fas fa-envelope mr-1"></i>${c.email}</p>
                                 </div>
                             </div>
                             <div class="flex space-x-2">
-                                <button onclick="copyZaloFormat('${c.id}')" class="bg-blue-600 text-white text-xs px-3 py-1.5 rounded-lg"><i class="fas fa-copy mr-1"></i>Copy Zalo</button>
-                                <button onclick="openServiceModal('${c.id}')" class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs px-3 py-1.5 rounded-lg"><i class="fas fa-plus mr-1"></i>Thêm DV</button>
-                                <button onclick="openCustomerModal('${c.id}')" class="text-gray-400 hover:text-blue-600 p-2"><i class="fas fa-edit"></i></button>
-                                <button onclick="deleteCustomer('${c.id}')" class="text-gray-400 hover:text-rose-600 p-2"><i class="fas fa-trash"></i></button>
+                                <button onclick="window.copyZaloFormat('${c.id}')" class="bg-blue-600 text-white text-xs px-3 py-1.5 rounded-lg"><i class="fas fa-copy mr-1"></i>Copy Zalo</button>
+                                <button onclick="window.openServiceModal('${c.id}')" class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs px-3 py-1.5 rounded-lg"><i class="fas fa-plus mr-1"></i>Thêm DV</button>
+                                <button onclick="window.openCustomerModal('${c.id}')" class="text-gray-400 hover:text-blue-600 p-2"><i class="fas fa-edit"></i></button>
+                                <button onclick="window.deleteCustomer('${c.id}')" class="text-gray-400 hover:text-rose-600 p-2"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                         <div class="p-4 bg-gray-50">
@@ -667,12 +691,12 @@
                                             <td class="py-2.5 text-blue-600">${s.url || '-'}</td>
                                             <td class="py-2.5">${s.account || '-'}</td>
                                             <td class="py-2.5">
-                                                ${s.loginType === 'google' ? 'Google Login' : `<span>${s.password ? (visiblePasswords[s.id] ? s.password : '••••••••') : '-'}</span> <button onclick="togglePasswordDisplay('${s.id}')" class="ml-1 text-gray-400"><i class="fas ${visiblePasswords[s.id] ? 'fa-eye-slash' : 'fa-eye'}"></i></button>`}
+                                                ${s.loginType === 'google' ? 'Google Login' : `<span>${s.password ? (visiblePasswords[s.id] ? s.password : '••••••••') : '-'}</span> <button onclick="window.togglePasswordDisplay('${s.id}')" class="ml-1 text-gray-400"><i class="fas ${visiblePasswords[s.id] ? 'fa-eye-slash' : 'fa-eye'}"></i></button>`}
                                             </td>
                                             <td class="py-2.5">${s.isPaid ? '<span class="text-emerald-600 font-bold">[Đã TT]</span>' : '<span class="text-rose-600 font-bold">Còn Nợ</span>'}</td>
                                             <td class="py-2.5 text-right space-x-2">
-                                                <button onclick="openServiceModal('${c.id}','${s.id}')" class="text-gray-400 hover:text-blue-600"><i class="fas fa-pen"></i></button>
-                                                <button onclick="deleteService('${c.id}','${s.id}')" class="text-gray-400 hover:text-rose-600"><i class="fas fa-trash"></i></button>
+                                                <button onclick="window.openServiceModal('${c.id}','${s.id}')" class="text-gray-400 hover:text-blue-600"><i class="fas fa-pen"></i></button>
+                                                <button onclick="window.deleteService('${c.id}','${s.id}')" class="text-gray-400 hover:text-rose-600"><i class="fas fa-trash"></i></button>
                                             </td>
                                         </tr>
                                     `).join('')}
@@ -682,32 +706,105 @@
                     </div>`;
                 container.innerHTML += html;
             });
-        }
+        };
 
-        function updateDashboardStats() {
+        window.updateDashboardStats = function() {
             let tc = customers.length, ts = 0, tr = 0, td = 0;
             customers.forEach(c => {
-                ts += c.services.length;
-                c.services.forEach(s => { const p = Number(s.price)||0; s.isPaid ? (tr+=p) : (td+=p); });
+                if (c.services) {
+                    ts += c.services.length;
+                    c.services.forEach(s => { const p = Number(s.price)||0; s.isPaid ? (tr+=p) : (td+=p); });
+                }
             });
-            document.getElementById('stat-total-customers').innerText = tc;
-            document.getElementById('stat-total-services').innerText = ts;
-            document.getElementById('stat-total-revenue').innerText = tr.toLocaleString() + ' đ';
-            document.getElementById('stat-total-debt').innerText = td.toLocaleString() + ' đ';
-        }
+            const cEl = document.getElementById('stat-total-customers');
+            const sEl = document.getElementById('stat-total-services');
+            const rEl = document.getElementById('stat-total-revenue');
+            const dEl = document.getElementById('stat-total-debt');
 
-        function renderAccountsTab() {
+            if (cEl) cEl.innerText = tc;
+            if (sEl) sEl.innerText = ts;
+            if (rEl) rEl.innerText = tr.toLocaleString() + ' đ';
+            if (dEl) dEl.innerText = td.toLocaleString() + ' đ';
+        };
+
+        window.renderAccountsTab = function() {
             const tbody = document.getElementById('accounts-table-body');
-            const search = document.getElementById('search-account').value.toLowerCase();
+            const searchEl = document.getElementById('search-account');
+            const search = searchEl ? searchEl.value.toLowerCase() : '';
+            if (!tbody) return;
             tbody.innerHTML = '';
-            customers.forEach(c => c.services.forEach(s => {
-                if (s.name.toLowerCase().includes(search) || (s.account||'').toLowerCase().includes(search) || c.name.toLowerCase().includes(search)) {
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-gray-50 border-b">
-                            <td class="p-3">${c.name}</td>
-                            <td class="p-3 font-bold">${s.name}</td>
-                            <td class="p-3">${s.loginType === 'google' ? 'Google' : 'Mật khẩu'}</td>
-                            <td class="p-3">${s.account||'-'}</td>
-                            <td class="p-3">${s.loginType === 'google' ? 'Google Login' : (s.password ? (visiblePasswords[s.id] ? s.password : '••••••••') : '-')}</td>
-                            <td class="p-3">${s.serviceType === 'lifetime' ? 'Vĩnh viễn' : (s.expiryDate||'-')}</td>
-                            <td class="
+            
+            customers.forEach(c => {
+                if (c.services) {
+                    c.services.forEach(s => {
+                        if (s.name.toLowerCase().includes(search) || (s.account||'').toLowerCase().includes(search) || c.name.toLowerCase().includes(search)) {
+                            tbody.innerHTML += `
+                                <tr class="hover:bg-gray-50 border-b">
+                                    <td class="p-3">${c.name}</td>
+                                    <td class="p-3 font-bold">${s.name}</td>
+                                    <td class="p-3">${s.loginType === 'google' ? 'Google' : 'Mật khẩu'}</td>
+                                    <td class="p-3">${s.account||'-'}</td>
+                                    <td class="p-3">${s.loginType === 'google' ? 'Google Login' : (s.password ? (visiblePasswords[s.id] ? s.password : '••••••••') : '-')}</td>
+                                    <td class="p-3">${s.serviceType === 'lifetime' ? 'Vĩnh viễn' : (s.expiryDate||'-')}</td>
+                                    <td class="p-3">${s.isPaid ? '<span class="text-emerald-600">[Đã TT]</span>' : '<span class="text-rose-600">Còn Nợ</span>'}</td>
+                                </tr>`;
+                        }
+                    });
+                }
+            });
+        };
+
+        window.renderDebtsTab = function() {
+            const tbody = document.getElementById('debts-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            customers.forEach(c => {
+                if (c.services) {
+                    c.services.filter(s => !s.isPaid).forEach(s => {
+                        tbody.innerHTML += `
+                            <tr class="hover:bg-rose-50 border-b">
+                                <td class="p-3 font-bold">${c.name}</td>
+                                <td class="p-3">${c.phone}</td>
+                                <td class="p-3">${s.name}</td>
+                                <td class="p-3 text-rose-600 font-bold">${(Number(s.price)||0).toLocaleString()} đ</td>
+                                <td class="p-3">${s.serviceType === 'lifetime' ? 'Vĩnh viễn' : s.expiryDate}</td>
+                                <td class="p-3"><button onclick="window.markAsPaid('${c.id}', '${s.id}')" class="bg-emerald-600 text-white text-xs px-2 py-1 rounded">Thanh Toán</button></td>
+                            </tr>`;
+                    });
+                }
+            });
+        };
+
+        window.markAsPaid = function(cId, sId) {
+            const c = customers.find(x => x.id === cId);
+            const s = c && c.services ? c.services.find(x => x.id === sId) : null;
+            if (s) { 
+                s.isPaid = true; 
+                window.saveDataToStorage(); 
+                window.renderDebtsTab(); 
+                window.renderCustomers(); 
+                window.showToast("Đã thanh toán nợ!"); 
+            }
+        };
+
+        // Khởi chạy khi DOM load xong
+        document.addEventListener('DOMContentLoaded', () => {
+            window.loadDataFromStorage();
+            
+            const sidebarBtn = document.getElementById('toggle-sidebar-btn');
+            if (sidebarBtn) {
+                sidebarBtn.addEventListener('click', () => {
+                    const sb = document.getElementById('sidebar');
+                    if (sb) sb.classList.toggle('w-64');
+                    if (sb) sb.classList.toggle('w-20');
+                    document.querySelectorAll('.nav-text, .sidebar-label, .logo-text').forEach(el => el.classList.toggle('hidden'));
+                });
+            }
+
+            window.renderCustomers();
+            window.updateDashboardStats();
+        });
+    </script>
+</body>
+</html>
