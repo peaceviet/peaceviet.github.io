@@ -1,637 +1,1075 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="h-full bg-gray-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM Quản Lý Khách Hàng & Dịch Vụ</title>
+    <title>Hệ Thống Quản Lý Khách Hàng & Dịch Vụ - CRM Pro</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            dark: '#0f172a',
-                            sidebar: '#111827'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #1f2937;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 3px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
-        }
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="bg-gray-100 font-sans antialiased text-gray-800 min-h-screen flex flex-col">
+<body class="h-full text-gray-800 antialiased flex flex-col md:flex-row overflow-x-hidden">
 
-    <div id="app-container" class="flex flex-1 min-h-screen relative overflow-x-hidden">
-
-        <!-- SIDEBAR -->
-        <aside id="sidebar" class="w-64 bg-[#111827] text-gray-300 flex flex-col transition-all duration-300 shrink-0 z-20 shadow-xl">
-            <div class="p-4 flex items-center justify-between border-b border-gray-800">
-                <div class="flex items-center space-x-3 logo-text">
-                    <div class="w-9 h-9 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">C</div>
-                    <span class="font-bold text-lg text-white tracking-wide">CRM Pro</span>
+    <!-- SIDEBAR -->
+    <aside class="w-full md:w-64 bg-[#111827] text-gray-300 flex-shrink-0 flex flex-col justify-between min-h-screen">
+        <div>
+            <!-- App Brand -->
+            <div class="p-5 flex items-center justify-between border-b border-gray-800">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-emerald-900/40">
+                        <i class="fas fa-users-gear"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-white text-base leading-tight">CRM Manager</h1>
+                        <span class="text-xs text-emerald-400 font-medium">Offline Storage Pro</span>
+                    </div>
                 </div>
-                <button id="toggle-sidebar-btn" class="p-1.5 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-white transition">
-                    <i class="fas fa-bars text-lg"></i>
-                </button>
             </div>
 
-            <nav class="flex-1 p-3 space-y-6 overflow-y-auto custom-scrollbar">
-                <!-- Group 1: Menu Chính -->
-                <div>
-                    <div class="px-3 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider sidebar-label">MENU CHÍNH</div>
-                    <div class="space-y-1">
-                        <button onclick="window.switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 hover:text-white">
-                            <i class="fas fa-chart-pie w-5 text-center text-emerald-500"></i>
-                            <span class="nav-text">Tổng quan</span>
-                        </button>
-                        <button onclick="window.switchTab('customers')" id="nav-customers" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition bg-emerald-600 text-white shadow-md">
-                            <i class="fas fa-users w-5 text-center"></i>
-                            <span class="nav-text">Khách hàng & Dịch vụ</span>
-                        </button>
-                        <button onclick="window.switchTab('accounts')" id="nav-accounts" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 hover:text-white">
-                            <i class="fas fa-key w-5 text-center text-amber-500"></i>
-                            <span class="nav-text">Tất cả tài khoản</span>
-                        </button>
-                        <button onclick="window.switchTab('debts')" id="nav-debts" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 hover:text-white">
-                            <i class="fas fa-receipt w-5 text-center text-rose-500"></i>
-                            <span class="nav-text">Công nợ & Sổ thu chi</span>
-                        </button>
-                    </div>
-                </div>
+            <!-- Navigation Links -->
+            <nav class="p-4 space-y-1.5">
+                <button onclick="window.switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all bg-emerald-600 text-white shadow-md shadow-emerald-900/20">
+                    <i class="fas fa-[#111827] fa-chart-pie w-5 text-center"></i>
+                    <span>Tổng Quan (Dashboard)</span>
+                </button>
 
-                <!-- Group 2: Dữ liệu & Cài đặt -->
-                <div>
-                    <div class="px-3 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider sidebar-label">DỮ LIỆU & CÀI ĐẶT</div>
-                    <div class="space-y-1">
-                        <button onclick="window.exportDataJSON()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 text-gray-300 hover:text-white">
-                            <i class="fas fa-file-export w-5 text-center text-cyan-400"></i>
-                            <span class="nav-text">Sao lưu (Export JSON)</span>
-                        </button>
-                        <label class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 text-gray-300 hover:text-white cursor-pointer">
-                            <i class="fas fa-file-import w-5 text-center text-indigo-400"></i>
-                            <span class="nav-text">Khôi phục (Import JSON)</span>
-                            <input type="file" id="import-json-file" accept=".json" class="hidden" onchange="window.importDataJSON(event)">
-                        </label>
-                        <button onclick="window.showPersistentStorageInfo()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 text-gray-300 hover:text-white">
-                            <i class="fas fa-database w-5 text-center text-amber-400"></i>
-                            <span class="nav-text">Trạng thái Lưu trữ</span>
-                        </button>
-                        <button onclick="window.resetToSampleData()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 text-rose-400 hover:text-rose-300">
-                            <i class="fas fa-undo w-5 text-center"></i>
-                            <span class="nav-text">Đặt lại dữ liệu mẫu</span>
-                        </button>
-                    </div>
-                </div>
+                <button onclick="window.switchTab('customers')" id="nav-customers" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-gray-800 hover:text-white">
+                    <i class="fas fa-address-book w-5 text-center"></i>
+                    <span>Khách Hàng & Dịch Vụ</span>
+                </button>
+
+                <button onclick="window.switchTab('accounts')" id="nav-accounts" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-gray-800 hover:text-white">
+                    <i class="fas fa-key w-5 text-center"></i>
+                    <span>Tất Cả Tài Khoản</span>
+                </button>
+
+                <button onclick="window.switchTab('debts')" id="nav-debts" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-gray-800 hover:text-white">
+                    <i class="fas fa-file-invoice-dollar w-5 text-center"></i>
+                    <span>Công Nợ & Sổ Thu Chi</span>
+                </button>
             </nav>
-        </aside>
+        </div>
 
-        <main class="flex-1 flex flex-col min-w-0 bg-gray-50">
-            <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm">
-                <h1 id="page-title" class="text-xl font-bold text-gray-800">Quản Lý Khách Hàng & Dịch Vụ</h1>
-                <button onclick="window.openCustomerModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 shadow-sm transition">
-                    <i class="fas fa-user-plus"></i>
+        <!-- Sidebar Footer Controls -->
+        <div class="p-4 border-t border-gray-800 space-y-2 text-xs">
+            <div class="bg-gray-800/60 rounded-xl p-3 text-gray-400 space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="font-medium text-gray-300">Lưu Trữ An Toàn:</span>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1 animate-pulse"></span> Offline
+                    </span>
+                </div>
+                <p class="text-[11px] text-gray-400 leading-relaxed">Dữ liệu được lưu trực tiếp vào LocalStorage + IndexedDB trên máy của bạn.</p>
+            </div>
+
+            <!-- Backup & Restore Action Buttons -->
+            <div class="grid grid-cols-2 gap-2 pt-1">
+                <button onclick="window.exportDataJSON()" class="flex items-center justify-center space-x-1.5 py-2 px-3 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg text-xs font-medium border border-gray-700 transition" title="Tải file JSON dự phòng">
+                    <i class="fas fa-download text-emerald-400"></i>
+                    <span>Sao Lưu</span>
+                </button>
+                <label class="flex items-center justify-center space-x-1.5 py-2 px-3 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg text-xs font-medium border border-gray-700 cursor-pointer transition" title="Khôi phục dữ liệu từ JSON">
+                    <i class="fas fa-upload text-blue-400"></i>
+                    <span>Khôi Phục</span>
+                    <input type="file" id="import-file-input" accept=".json" class="hidden" onchange="window.importDataJSON(event)">
+                </label>
+            </div>
+            
+            <button onclick="window.showPersistentStorageInfo()" class="w-full text-center py-1.5 text-gray-500 hover:text-gray-300 text-[11px] transition">
+                <i class="fas fa-circle-info mr-1"></i>Kiểm Tra Trạng Thái Bộ Nhớ
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 flex flex-col min-w-0 bg-gray-50 overflow-y-auto">
+        <!-- TOPBAR HEADER -->
+        <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+            <div class="flex items-center space-x-4">
+                <h2 id="page-title" class="text-xl font-bold text-gray-800">Tổng Quan Hệ Thống</h2>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="window.openCustomerModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold shadow-md shadow-emerald-600/20 flex items-center space-x-2 transition">
+                    <i class="fas fa-plus"></i>
                     <span>Thêm Khách Hàng</span>
                 </button>
-            </header>
-
-            <div class="p-6 flex-1 overflow-y-auto">
-                <!-- TAB 1: DASHBOARD -->
-                <div id="tab-dashboard" class="tab-content hidden space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-                            <div>
-                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Khách Hàng</p>
-                                <p id="stat-total-customers" class="text-2xl font-bold text-gray-800 mt-1">0</p>
-                            </div>
-                            <div class="w-12 h-12 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xl"><i class="fas fa-users"></i></div>
-                        </div>
-                        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-                            <div>
-                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Tổng Dịch Vụ</p>
-                                <p id="stat-total-services" class="text-2xl font-bold text-gray-800 mt-1">0</p>
-                            </div>
-                            <div class="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl"><i class="fas fa-concierge-bell"></i></div>
-                        </div>
-                        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-                            <div>
-                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Tổng Doanh Thu</p>
-                                <p id="stat-total-revenue" class="text-2xl font-bold text-emerald-600 mt-1">0 đ</p>
-                            </div>
-                            <div class="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl"><i class="fas fa-wallet"></i></div>
-                        </div>
-                        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-                            <div>
-                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Công Nợ Chưa Thu</p>
-                                <p id="stat-total-debt" class="text-2xl font-bold text-rose-600 mt-1">0 đ</p>
-                            </div>
-                            <div class="w-12 h-12 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-xl"><i class="fas fa-exclamation-circle"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 2: CUSTOMERS & SERVICES -->
-                <div id="tab-customers" class="tab-content space-y-4">
-                    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between">
-                        <div class="relative w-full md:w-96">
-                            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input type="text" id="search-customer" oninput="window.renderCustomers()" placeholder="Tìm theo Tên, SĐT, Email..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        </div>
-                        <div class="text-sm text-gray-500">
-                            Hiển thị: <span id="customer-count" class="font-bold text-gray-800">0</span> khách hàng
-                        </div>
-                    </div>
-                    <div id="customer-list" class="space-y-4"></div>
-                </div>
-
-                <!-- TAB 3: ALL ACCOUNTS -->
-                <div id="tab-accounts" class="tab-content hidden space-y-4">
-                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                        <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-                            <h3 class="font-bold text-gray-800">Tất Cả Tài Khoản Dịch Vụ</h3>
-                            <input type="text" id="search-account" oninput="window.renderAccountsTab()" placeholder="Tìm tài khoản..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm">
-                                <thead class="bg-gray-50 text-gray-600 border-b border-gray-200">
-                                    <tr>
-                                        <th class="p-3">Khách Hàng</th>
-                                        <th class="p-3">Dịch Vụ</th>
-                                        <th class="p-3">Đăng Nhập</th>
-                                        <th class="p-3">Tài Khoản</th>
-                                        <th class="p-3">Mật Khẩu</th>
-                                        <th class="p-3">Thời Hạn</th>
-                                        <th class="p-3">Trạng Thái</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="accounts-table-body" class="divide-y divide-gray-200"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 4: DEBTS -->
-                <div id="tab-debts" class="tab-content hidden space-y-4">
-                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                        <div class="p-4 border-b border-gray-200">
-                            <h3 class="font-bold text-gray-800 text-rose-600"><i class="fas fa-exclamation-triangle mr-2"></i>Dịch Vụ Chưa Thanh Toán</h3>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm">
-                                <thead class="bg-rose-50 text-rose-800 border-b border-rose-100">
-                                    <tr>
-                                        <th class="p-3">Khách Hàng</th>
-                                        <th class="p-3">SĐT</th>
-                                        <th class="p-3">Dịch Vụ</th>
-                                        <th class="p-3">Số Tiền</th>
-                                        <th class="p-3">Hạn Dùng</th>
-                                        <th class="p-3">Thao Tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="debts-table-body" class="divide-y divide-gray-200"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
             </div>
-        </main>
-    </div>
+        </header>
 
-    <!-- MODAL 1: CUSTOMER FORM -->
-    <div id="modal-customer" class="fixed inset-0 bg-black/50 z-40 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl relative">
-            <div class="flex justify-between items-center mb-4 border-b pb-3">
-                <h3 id="modal-customer-title" class="text-lg font-bold text-gray-800">Thêm Khách Hàng</h3>
-                <button onclick="window.closeCustomerModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-lg"></i></button>
+        <div class="p-6 space-y-6 max-w-7xl w-full mx-auto">
+
+            <!-- TAB 1: DASHBOARD -->
+            <section id="tab-dashboard" class="tab-content space-y-6">
+                <!-- Stat Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Tổng Khách Hàng</p>
+                            <h3 id="stat-total-customers" class="text-2xl font-bold text-gray-800 mt-1">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Dịch Vụ Đang Chạy</p>
+                            <h3 id="stat-active-services" class="text-2xl font-bold text-emerald-600 mt-1">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+                            <i class="fas fa-cubes"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Tổng Doanh Thu</p>
+                            <h3 id="stat-total-revenue" class="text-2xl font-bold text-gray-800 mt-1">0 đ</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Chưa Thanh Toán</p>
+                            <h3 id="stat-unpaid-amount" class="text-2xl font-bold text-rose-600 mt-1">0 đ</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Customers & Expiring Services Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Expiring Soon Services -->
+                    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+                            <h3 class="font-bold text-gray-800 flex items-center space-x-2">
+                                <i class="fas fa-hourglass-half text-amber-500"></i>
+                                <span>Dịch Vụ Sắp Hết Hạn (30 Ngày)</span>
+                            </h3>
+                            <span id="expiring-count-badge" class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">0</span>
+                        </div>
+                        <div id="expiring-services-list" class="space-y-3">
+                            <p class="text-sm text-gray-400 text-center py-6">Không có dịch vụ nào sắp hết hạn.</p>
+                        </div>
+                    </div>
+
+                    <!-- System Overview / Quick Tips -->
+                    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-gray-800 mb-4 pb-3 border-b border-gray-100 flex items-center space-x-2">
+                                <i class="fas fa-shield-alt text-emerald-600"></i>
+                                <span>Tính Năng & Hướng Dẫn</span>
+                            </h3>
+                            <ul class="space-y-3 text-sm text-gray-600">
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-emerald-500 mt-0.5"></i>
+                                    <span><strong>Hình thức đăng nhập linh hoạt:</strong> Đã hỗ trợ Google Login (không cần nhập mật khẩu), Token/Access Key, và Mật khẩu thường.</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-emerald-500 mt-0.5"></i>
+                                    <span><strong>An toàn tuyệt đối:</strong> Mật khẩu mặc định được ẩn dưới dạng <code class="bg-gray-100 px-1 py-0.5 rounded text-xs">••••••••</code> trên toàn giao diện.</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-emerald-500 mt-0.5"></i>
+                                    <span><strong>Gửi Zalo nhanh 1-Click:</strong> Định dạng mẫu Zalo đẹp mắt, không dính tag thanh toán thừa, sẵn sàng copy gửi ngay cho khách.</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-emerald-500 mt-0.5"></i>
+                                    <span><strong>Import An Toàn:</strong> Khi nhập file JSON, nếu phát hiện trùng lặp hệ thống sẽ hỏi ý kiến xác nhận từ bạn trước khi thực hiện.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+                            <span class="text-xs text-gray-400">Phiên bản: 2.5.0 Pro</span>
+                            <button onclick="window.resetToSampleData()" class="text-xs text-rose-500 hover:text-rose-700 underline font-medium">Đặt lại dữ liệu mẫu</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: CUSTOMERS & SERVICES -->
+            <section id="tab-customers" class="tab-content hidden space-y-4">
+                <!-- Search and Filter Bar -->
+                <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
+                    <div class="relative w-full sm:w-80">
+                        <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+                        <input type="text" id="search-customer-input" oninput="window.renderCustomers()" placeholder="Tìm kiếm tên, SĐT, Email..." class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                    </div>
+                    <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+                        <select id="filter-status-select" onchange="window.renderCustomers()" class="border border-gray-200 rounded-xl text-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+                            <option value="all">Tất cả khách hàng</option>
+                            <option value="has_services">Có dịch vụ</option>
+                            <option value="unpaid">Có công nợ</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Customer Cards List Container -->
+                <div id="customers-list-container" class="space-y-4">
+                    <!-- Dynamic rendering via Javascript -->
+                </div>
+            </section>
+
+            <!-- TAB 3: ALL ACCOUNTS -->
+            <section id="tab-accounts" class="tab-content hidden space-y-4">
+                <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
+                    <div class="relative w-full sm:w-80">
+                        <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+                        <input type="text" id="search-account-input" oninput="window.renderAccountsTab()" placeholder="Tìm theo Dịch vụ, Tài khoản, Khách..." class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                    </div>
+                    <span id="accounts-count-tag" class="text-xs text-gray-500 font-medium">Hiển thị 0 tài khoản</span>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-gray-600">
+                            <thead class="bg-gray-50 text-gray-700 text-xs font-semibold uppercase tracking-wider border-b border-gray-200">
+                                <tr>
+                                    <th class="px-5 py-3.5">Khách Hàng</th>
+                                    <th class="px-5 py-3.5">Dịch Vụ / Trang</th>
+                                    <th class="px-5 py-3.5">Loại Đăng Nhập</th>
+                                    <th class="px-5 py-3.5">Tài Khoản / Email</th>
+                                    <th class="px-5 py-3.5">Mật Khẩu / Token</th>
+                                    <th class="px-5 py-3.5">Thời Hạn</th>
+                                    <th class="px-5 py-3.5 text-right">Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="accounts-table-body" class="divide-y divide-gray-100">
+                                <!-- Dynamic JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: DEBTS & UNPAID -->
+            <section id="tab-debts" class="tab-content hidden space-y-4">
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start space-x-3">
+                    <i class="fas fa-exclamation-triangle text-amber-600 text-lg mt-0.5"></i>
+                    <div class="text-sm text-amber-900">
+                        <p class="font-bold">Sổ Thu Chi & Công Nợ Chưa Thanh Toán</p>
+                        <p class="text-xs text-amber-700 mt-0.5">Danh sách liệt kê toàn bộ dịch vụ của khách hàng chưa hoàn tất thanh toán. Bạn có thể bấm "Đánh dấu đã thanh toán" để gạch nợ.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-gray-600">
+                            <thead class="bg-gray-50 text-gray-700 text-xs font-semibold uppercase tracking-wider border-b border-gray-200">
+                                <tr>
+                                    <th class="px-5 py-3.5">Khách Hàng</th>
+                                    <th class="px-5 py-3.5">SĐT</th>
+                                    <th class="px-5 py-3.5">Dịch Vụ Nợ</th>
+                                    <th class="px-5 py-3.5">Số Tiền Nợ</th>
+                                    <th class="px-5 py-3.5">Hạn Dịch Vụ</th>
+                                    <th class="px-5 py-3.5 text-right">Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="debts-table-body" class="divide-y divide-gray-100">
+                                <!-- Dynamic JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- MODAL 1: CUSTOMER EDIT/ADD -->
+    <div id="modal-customer" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative transform transition-all">
+            <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
+                <h3 id="modal-customer-title" class="text-lg font-bold text-gray-800">Thêm Khách Hàng Mới</h3>
+                <button onclick="window.closeCustomerModal()" class="text-gray-400 hover:text-gray-600 p-1 rounded-lg">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
             </div>
+            
             <form id="form-customer" onsubmit="window.saveCustomer(event)" class="space-y-4">
                 <input type="hidden" id="cust-id">
+                
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Tên Khách Hàng <span class="text-rose-500">*</span></label>
-                    <input type="text" id="cust-name" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tên Khách Hàng <span class="text-rose-500">*</span></label>
+                    <input type="text" id="cust-name" required placeholder="Nhập họ và tên..." class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 </div>
+
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Số Điện Thoại <span class="text-rose-500">*</span></label>
-                    <input type="text" id="cust-phone" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Số Điện Thoại <span class="text-rose-500">*</span></label>
+                    <input type="text" id="cust-phone" required placeholder="Ví dụ: 0932211296" class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 </div>
+
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Email <span class="text-rose-500">*</span></label>
-                    <input type="email" id="cust-email" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Email</label>
+                    <input type="email" id="cust-email" placeholder="example@gmail.com" class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 </div>
+
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Ghi chú</label>
-                    <textarea id="cust-note" rows="2" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500"></textarea>
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Ghi Chú</label>
+                    <textarea id="cust-note" rows="2" placeholder="Ghi chú riêng về khách..." class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
                 </div>
-                <div id="cust-error" class="text-xs text-rose-500 hidden"></div>
-                <div class="flex justify-end space-x-3 pt-3 border-t">
-                    <button type="button" onclick="window.closeCustomerModal()" class="px-4 py-2 border rounded-lg text-sm text-gray-600">Hủy</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm">Lưu</button>
+
+                <div class="flex justify-end space-x-3 pt-3 border-t border-gray-100">
+                    <button type="button" onclick="window.closeCustomerModal()" class="px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50">Hủy</button>
+                    <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl text-sm shadow-md shadow-emerald-600/20">Lưu Thông Tin</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL 2: SERVICE FORM -->
+    <!-- MODAL 2: SERVICE EDIT/ADD -->
     <div id="modal-service" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl relative">
-            <div class="flex justify-between items-center mb-4 border-b pb-3">
-                <h3 id="modal-service-title" class="text-lg font-bold text-gray-800">Thêm Dịch Vụ</h3>
-                <button onclick="window.closeServiceModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-lg"></i></button>
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
+                <h3 id="modal-service-title" class="text-lg font-bold text-gray-800">Thêm Dịch Vụ Mới</h3>
+                <button onclick="window.closeServiceModal()" class="text-gray-400 hover:text-gray-600 p-1 rounded-lg">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
             </div>
+            
             <form id="form-service" onsubmit="window.saveService(event)" class="space-y-4">
-                <input type="hidden" id="service-cust-id">
-                <input type="hidden" id="service-id">
+                <input type="hidden" id="serv-cust-id">
+                <input type="hidden" id="serv-id">
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Tên Dịch Vụ <span class="text-rose-500">*</span></label>
-                        <input type="text" id="service-name" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Hình Thức Đăng Nhập</label>
-                        <select id="service-login-type" onchange="window.toggleLoginTypeFields()" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
-                            <option value="normal">Mật khẩu thường</option>
-                            <option value="google">Google Login</option>
-                            <option value="multiple">Nhiều hình thức (Đa tài khoản)</option>
-                        </select>
-                    </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tên Dịch Vụ / Trang Web <span class="text-rose-500">*</span></label>
+                    <input type="text" id="serv-name" required placeholder="Ví dụ: Beacons, Zypage, Canva Pro..." class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Đường Dẫn Đăng Nhập (URL)</label>
-                    <input type="url" id="service-url" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Đường Dẫn / URL Website</label>
+                    <input type="url" id="serv-url" placeholder="https://..." class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 </div>
 
-                <!-- Dành cho hình thức normal / google / token -->
-                <div id="single-login-fields" class="space-y-3">
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1">Tài Khoản / Email / User</label>
-                            <input type="text" id="service-account" placeholder="user@gmail.com" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
-                        </div>
-                        <div id="field-password-container">
-                            <label id="label-password-title" class="block text-xs font-semibold text-gray-600 mb-1">Mật khẩu / Token</label>
-                            <div class="relative">
-                                <input type="text" id="service-password" placeholder="Mật khẩu hoặc Token (API Key...)" class="w-full px-3 py-2 border rounded-lg text-sm pr-9 focus:ring-emerald-500">
-                                <button type="button" onclick="window.toggleInputPasswordVisibility('service-password', this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 p-1">
-                                    <i class="fas fa-eye text-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Thông báo riêng cho Google Login -->
-                <div id="google-login-notice" class="hidden bg-blue-50 border border-blue-200 text-blue-700 px-3 py-2 rounded-lg text-xs flex items-center space-x-2">
-                    <i class="fas fa-info-circle"></i>
-                    <span>Đăng nhập bằng Google không cần mật khẩu hệ thống. Khách hàng sẽ đăng nhập trực tiếp qua tài khoản Google của họ.</span>
-                </div>
-
-                <!-- Dành cho hình thức "multiple" -->
-                <div id="multiple-login-fields" class="space-y-3 hidden bg-gray-50 p-3 rounded-lg border border-gray-200">
-                    <div class="flex justify-between items-center">
-                        <label class="block text-xs font-semibold text-gray-700">Danh sách nhiều cách đăng nhập</label>
-                        <button type="button" onclick="window.addCredentialRow()" class="text-xs bg-emerald-600 text-white px-2.5 py-1 rounded hover:bg-emerald-700">
-                            <i class="fas fa-plus mr-1"></i>Thêm cách đăng nhập
-                        </button>
-                    </div>
-                    <div id="credentials-container" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
+                <!-- LOGIN TYPE SELECTOR -->
+                <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-200 space-y-3">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Loại Thời Hạn</label>
-                        <select id="service-type" onchange="window.toggleExpiryField()" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
-                            <option value="fixed">Có Thời Hạn</option>
-                            <option value="lifetime">Vĩnh Viễn</option>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Hình Thức Đăng Nhập <span class="text-rose-500">*</span></label>
+                        <select id="serv-login-type" onchange="window.onLoginTypeChange()" class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white font-medium">
+                            <option value="email_password">🔑 Mật Khẩu Thường (Email / Mật khẩu)</option>
+                            <option value="google">🌐 Đăng Nhập Trực Tiếp Bằng Google (Google Login)</option>
+                            <option value="token">🔑 Mã Access Token / API Key</option>
+                            <option value="custom">⚡ Hình Thức Tùy Chỉnh Khác</option>
                         </select>
                     </div>
-                    <div id="field-expiry-container">
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Ngày Hết Hạn</label>
-                        <input type="date" id="service-expiry" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
+
+                    <div>
+                        <label id="lbl-serv-account" class="block text-xs font-bold text-gray-700 uppercase mb-1">Tài Khoản / Email Đăng Nhập</label>
+                        <input type="text" id="serv-account" placeholder="Nhập email hoặc username..." class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+                    </div>
+
+                    <!-- PASSWORD / TOKEN FIELD -->
+                    <div id="container-serv-password">
+                        <label id="lbl-serv-password" class="block text-xs font-bold text-gray-700 uppercase mb-1">Mật Khẩu / Thông Tin Xác Thực</label>
+                        <div class="relative">
+                            <input type="password" id="serv-password" placeholder="Nhập mật khẩu..." class="w-full pl-3.5 pr-10 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+                            <button type="button" onclick="window.toggleInputPasswordVisibility('serv-password', this)" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- GOOGLE LOGIN NOTE -->
+                    <div id="container-google-note" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-800">
+                        <i class="fas fa-info-circle mr-1"></i> Với hình thức <strong>Google Login</strong>, khách hàng đăng nhập trực tiếp bằng Google mà không cần mật khẩu.
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <!-- DURATION TYPE & EXPIRY -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Giá Tiền (VNĐ)</label>
-                        <input type="number" id="service-price" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Loại Thời Hạn</label>
+                        <select id="serv-duration-type" onchange="window.toggleExpiryField()" class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+                            <option value="fixed">Gói Có Thời Hạn</option>
+                            <option value="lifetime">Gói Vĩnh Viễn (Lifetime)</option>
+                        </select>
                     </div>
+
+                    <div id="container-expiry-date">
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Ngày Hết Hạn</label>
+                        <input type="date" id="serv-expiry" class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                </div>
+
+                <!-- PRICE & STATUS -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Trạng Thái</label>
-                        <select id="service-is-paid" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
-                            <option value="true">Đã Thanh Toán</option>
-                            <option value="false">Chưa Thanh Toán</option>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Giá Tiền (VNĐ)</label>
+                        <input type="number" id="serv-price" min="0" placeholder="0" class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Trạng Thái Thanh Toán</label>
+                        <select id="serv-paid" class="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white font-medium">
+                            <option value="true">✅ Đã Thanh Toán</option>
+                            <option value="false">❌ Chưa Thanh Toán (Công nợ)</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="flex justify-end space-x-3 pt-3 border-t">
-                    <button type="button" onclick="window.closeServiceModal()" class="px-4 py-2 border rounded-lg text-sm text-gray-600">Hủy</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm">Lưu Dịch Vụ</button>
+                <div class="flex justify-end space-x-3 pt-3 border-t border-gray-100">
+                    <button type="button" onclick="window.closeServiceModal()" class="px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50">Hủy</button>
+                    <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl text-sm shadow-md shadow-emerald-600/20">Lưu Dịch Vụ</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- TOAST -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-gray-900 text-white px-4 py-3 rounded-xl shadow-2xl z-[999] flex items-center space-x-3 hidden">
-        <i id="toast-icon" class="fas fa-check-circle text-emerald-400"></i>
-        <span id="toast-msg" class="text-sm font-medium">Thông báo</span>
+    <!-- MODAL 3: CUSTOM CONFIRM / ALERT DIALOG -->
+    <div id="modal-dialog" class="fixed inset-0 bg-black/60 z-[999] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative transform transition-all border border-gray-100">
+            <h3 id="dialog-title" class="text-lg font-bold text-gray-800 mb-2">Thông báo</h3>
+            <p id="dialog-msg" class="text-sm text-gray-600 mb-6 whitespace-pre-wrap leading-relaxed"></p>
+            <div class="flex justify-end space-x-3">
+                <button id="btn-dialog-cancel" class="px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hidden transition">Hủy</button>
+                <button id="btn-dialog-ok" class="px-5 py-2 bg-emerald-600 text-white font-medium rounded-xl text-sm hover:bg-emerald-700 transition shadow-md shadow-emerald-600/20">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-gray-900 text-white px-4 py-3 rounded-xl shadow-2xl z-[999] flex items-center space-x-3 hidden border border-gray-800">
+        <i id="toast-icon" class="fas fa-check-circle text-emerald-400 text-lg"></i>
+        <span id="toast-msg" class="text-sm font-medium">Thao tác thành công!</span>
     </div>
 
     <script>
+        // STORAGE KEY CONSTANTS
         const STORAGE_KEY = 'CRM_LOCAL_CUSTOMERS_DATA_V2';
-        let customers = [];
-        let visiblePasswords = {}; 
-        let isSaving = false;
-        let db = null;
+        const DB_NAME = 'CRM_OFFLINE_DB';
+        const DB_STORE = 'customers';
 
-        function initIndexedDB() {
-            return new Promise((resolve) => {
-                const request = indexedDB.open("CRM_Pro_DB", 1);
-                request.onerror = () => resolve(null);
-                request.onsuccess = (e) => {
-                    db = e.target.result;
-                    resolve(db);
-                };
+        // APPLICATION STATE
+        let customers = [];
+        let currentTab = 'dashboard';
+        let isSaving = false;
+
+        // INDEXEDDB HELPER FOR ROBUST PERSISTENCE
+        function openIndexedDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, 1);
                 request.onupgradeneeded = (e) => {
-                    const database = e.target.result;
-                    if (!database.objectStoreNames.contains("store")) {
-                        database.createObjectStore("store", { keyPath: "key" });
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(DB_STORE)) {
+                        db.createObjectStore(DB_STORE, { keyPath: 'id' });
                     }
                 };
+                request.onsuccess = (e) => resolve(e.target.result);
+                request.onerror = (e) => reject(e.target.error);
             });
         }
 
         async function saveToDB(data) {
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-                if (db) {
-                    const tx = db.transaction("store", "readwrite");
-                    tx.objectStore("store").put({ key: "customers", value: data });
-                }
-            } catch (e) {
-                console.error("Save error:", e);
+                const db = await openIndexedDB();
+                const tx = db.transaction(DB_STORE, 'readwrite');
+                const store = tx.objectStore(DB_STORE);
+                await new Promise((res, rej) => {
+                    const clearReq = store.clear();
+                    clearReq.onsuccess = () => {
+                        if (data.length === 0) res();
+                        let count = 0;
+                        data.forEach(item => {
+                            const addReq = store.add(item);
+                            addReq.onsuccess = () => {
+                                count++;
+                                if (count === data.length) res();
+                            };
+                        });
+                    };
+                    clearReq.onerror = rej;
+                });
+            } catch (err) {
+                console.warn('IndexedDB save fallback:', err);
             }
         }
 
         async function loadFromDB() {
             try {
-                if (db) {
-                    return new Promise((resolve) => {
-                        const tx = db.transaction("store", "readonly");
-                        const req = tx.objectStore("store").get("customers");
-                        req.onsuccess = () => {
-                            if (req.result && Array.isArray(req.result.value)) {
-                                resolve(req.result.value);
-                            } else {
-                                resolve(loadFromLocalStorage());
-                            }
-                        };
-                        req.onerror = () => resolve(loadFromLocalStorage());
-                    });
-                } else {
-                    return loadFromLocalStorage();
+                // First try LocalStorage
+                const localData = localStorage.getItem(STORAGE_KEY);
+                if (localData) {
+                    return JSON.parse(localData);
                 }
-            } catch (e) {
-                return loadFromLocalStorage();
+                // Fallback to IndexedDB
+                const db = await openIndexedDB();
+                const tx = db.transaction(DB_STORE, 'readonly');
+                const store = tx.objectStore(DB_STORE);
+                return new Promise((resolve) => {
+                    const req = store.getAll();
+                    req.onsuccess = () => resolve(req.result || []);
+                    req.onerror = () => resolve([]);
+                });
+            } catch (err) {
+                console.error('Error loading data:', err);
+                return [];
             }
         }
 
-        function loadFromLocalStorage() {
-            try {
-                const dataStr = localStorage.getItem(STORAGE_KEY);
-                if (dataStr) {
-                    const parsed = JSON.parse(dataStr);
-                    if (Array.isArray(parsed)) return parsed;
-                }
-            } catch (e) {}
-            return [];
-        }
-
-        window.loadDataFromStorage = async function() {
-            await initIndexedDB();
-            customers = await loadFromDB();
-            window.renderCustomers();
-            window.updateDashboardStats();
-        };
-
-        window.updateDashboardStats = function() {
-            let totalCustomers = customers.length;
-            let totalServices = 0;
-            let totalRevenue = 0;
-            let totalDebt = 0;
-
-            customers.forEach(c => {
-                if (c.services && Array.isArray(c.services)) {
-                    totalServices += c.services.length;
-                    c.services.forEach(s => {
-                        const price = Number(s.price) || 0;
-                        if (s.isPaid) {
-                            totalRevenue += price;
-                        } else {
-                            totalDebt += price;
-                        }
-                    });
-                }
-            });
-
-            const elCust = document.getElementById('stat-total-customers');
-            const elServ = document.getElementById('stat-total-services');
-            const elRev = document.getElementById('stat-total-revenue');
-            const elDebt = document.getElementById('stat-total-debt');
-
-            if (elCust) elCust.innerText = totalCustomers;
-            if (elServ) elServ.innerText = totalServices;
-            if (elRev) elRev.innerText = totalRevenue.toLocaleString() + ' đ';
-            if (elDebt) elDebt.innerText = totalDebt.toLocaleString() + ' đ';
-        };
-
-        window.saveDataToStorage = async function() {
-            await saveToDB(customers);
-            window.updateDashboardStats();
-        };
-
-        window.switchTab = function(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            const targetTab = document.getElementById(`tab-${tabId}`);
-            if (targetTab) targetTab.classList.remove('hidden');
-
-            document.querySelectorAll('.nav-item').forEach(el => {
-                el.classList.remove('bg-emerald-600', 'text-white', 'shadow-md');
-                el.classList.add('hover:bg-gray-800', 'text-gray-300');
-            });
-            const activeNav = document.getElementById(`nav-${tabId}`);
-            if (activeNav) activeNav.classList.add('bg-emerald-600', 'text-white', 'shadow-md');
-            
-            if (tabId === 'accounts') window.renderAccountsTab();
-            if (tabId === 'debts') window.renderDebtsTab();
-        };
-
-        window.exportDataJSON = function() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(customers, null, 2));
-            const dl = document.createElement('a');
-            dl.setAttribute("href", dataStr);
-            dl.setAttribute("download", `CRM_Backup_${new Date().toISOString().slice(0,10)}.json`);
-            document.body.appendChild(dl);
-            dl.click();
-            dl.remove();
-            window.showToast("Đã xuất file JSON sao lưu thành công!");
-        };
-
-        window.importDataJSON = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    if (Array.isArray(imported)) {
-                        let hasDuplicates = false;
-                        imported.forEach(impCust => {
-                            const exists = customers.some(c => c.id === impCust.id || c.phone === impCust.phone);
-                            if (exists) hasDuplicates = true;
-                        });
-
-                        let action = true; // Mặc định là gộp/thêm mới nếu không trùng
-                        if (hasDuplicates) {
-                            action = confirm("Phát hiện có KHÁCH HÀNG BỊ TRÙNG (trùng SĐT hoặc ID) trong file import.\n\nBấm 'OK' để GỘP dịch vụ cho khách trùng.\nBấm 'Cancel' nếu muốn GHI ĐÈ dữ liệu khách cũ thành khách mới.");
-                        }
-
-                        let addedCount = 0;
-                        let updatedCount = 0;
-
-                        if (hasDuplicates && !action) {
-                            // Trường hợp người dùng chọn GHI ĐÈ hoàn toàn (Cancel) cho các mục trùng
-                            imported.forEach(impCust => {
-                                const existingIndex = customers.findIndex(c => c.id === impCust.id || c.phone === impCust.phone);
-                                if (existingIndex !== -1) {
-                                    customers[existingIndex] = impCust; // Ghi đè hoàn toàn
-                                    updatedCount++;
-                                } else {
-                                    customers.push(impCust);
-                                    addedCount++;
-                                }
-                            });
-                            window.showToast(`Đã ghi đè ${updatedCount} và thêm mới ${addedCount} khách hàng!`);
-                        } else {
-                            // Trường hợp GỘP (mặc định hoặc user bấm OK khi có trùng)
-                            imported.forEach(impCust => {
-                                const existingIndex = customers.findIndex(c => c.id === impCust.id || c.phone === impCust.phone);
-                                if (existingIndex !== -1) {
-                                    // Gộp services nếu đã tồn tại khách hàng
-                                    if (!customers[existingIndex].services) customers[existingIndex].services = [];
-                                    if (impCust.services && Array.isArray(impCust.services)) {
-                                        impCust.services.forEach(impServ => {
-                                            if (!customers[existingIndex].services.some(s => s.id === impServ.id)) {
-                                                customers[existingIndex].services.push(impServ);
-                                                updatedCount++;
-                                            }
-                                        });
-                                    }
-                                } else {
-                                    customers.push(impCust);
-                                    addedCount++;
-                                }
-                            });
-                            window.showToast(`Nhập dữ liệu thành công! Thêm mới: ${addedCount}, Cập nhật thêm: ${updatedCount} dịch vụ.`);
-                        }
-
-                        await window.saveDataToStorage();
-                        window.renderCustomers();
-                        window.updateDashboardStats();
-                    } else {
-                        alert("File JSON không đúng định dạng danh sách khách hàng.");
+        // SAMPLE DATA FOR FIRST RUN
+        const SAMPLE_CUSTOMERS = [
+            {
+                id: 'cust_101',
+                name: 'TRẦN THỊ THẢO NGÂN',
+                phone: '0932211296',
+                email: 'tranthithaongan.ct@gmail.com',
+                note: 'Khách hàng VIP sử dụng gói thiết kế & landing page',
+                services: [
+                    {
+                        id: 'serv_201',
+                        name: 'Beacons',
+                        url: 'https://beacons.ai/muibenho',
+                        loginType: 'email_password',
+                        account: 'tranthithaongan.ct@gmail.com',
+                        password: 'muibenho_secret_pass',
+                        durationType: 'fixed',
+                        expiry: '2026-11-20',
+                        price: 500000,
+                        paid: true
+                    },
+                    {
+                        id: 'serv_202',
+                        name: 'Zypage',
+                        url: 'https://zypage.com/muibenho',
+                        loginType: 'google',
+                        account: 'tranthithaongan.ct@gmail.com',
+                        password: '',
+                        durationType: 'fixed',
+                        expiry: '2026-12-15',
+                        price: 350000,
+                        paid: false
                     }
-                } catch (err) {
-                    alert("Lỗi đọc file JSON: " + err.message);
-                }
-            };
-            reader.readAsText(file);
-            event.target.value = '';
-        };
-
-        window.resetToSampleData = async function() {
-            if (confirm("Đặt lại dữ liệu sẽ xóa toàn bộ danh sách hiện tại. Bạn chắc chắn?")) {
-                customers = [];
-                await window.saveDataToStorage();
-                window.renderCustomers();
-                window.showToast("Đã làm sạch dữ liệu!");
+                ]
+            },
+            {
+                id: 'cust_102',
+                name: 'NGUYỄN VĂN AN',
+                phone: '0912345678',
+                email: 'an.nguyen@gmail.com',
+                note: 'Dịch vụ thiết kế đồ họa Canva Pro',
+                services: [
+                    {
+                        id: 'serv_203',
+                        name: 'Canva Pro Enterprise',
+                        url: 'https://canva.com',
+                        loginType: 'token',
+                        account: 'an.nguyen@gmail.com',
+                        password: 'cnv_token_882910398201',
+                        durationType: 'lifetime',
+                        expiry: '',
+                        price: 250000,
+                        paid: true
+                    }
+                ]
             }
-        };
-
-        window.showPersistentStorageInfo = function() {
-            const totalClients = customers.length;
-            const totalServices = customers.reduce((acc, c) => acc + (c.services ? c.services.length : 0), 0);
-            alert(`Trạng thái Lưu trữ Ngoại tuyến:\n\n- Số lượng Khách hàng: ${totalClients}\n- Tổng Dịch vụ: ${totalServices}\n- Công nghệ lưu: IndexedDB + LocalStorage (Hoạt động offline vĩnh viễn trên trình duyệt này).`);
-        };
+        ];
 
         window.showToast = function(msg, isSuccess = true) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-msg').innerText = msg;
-            document.getElementById('toast-icon').className = isSuccess ? "fas fa-check-circle text-emerald-400" : "fas fa-exclamation-circle text-rose-400";
+            document.getElementById('toast-icon').className = isSuccess ? "fas fa-check-circle text-emerald-400 text-lg" : "fas fa-exclamation-circle text-rose-400 text-lg";
             toast.classList.remove('hidden');
             setTimeout(() => toast.classList.add('hidden'), 3000);
         };
 
-        window.toggleInputPasswordVisibility = function(id, btn) {
-            const input = document.getElementById(id);
+        window.showDialog = function(message, isConfirm = false, title = "Thông báo") {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('modal-dialog');
+                const titleEl = document.getElementById('dialog-title');
+                const msgEl = document.getElementById('dialog-msg');
+                const btnOk = document.getElementById('btn-dialog-ok');
+                const btnCancel = document.getElementById('btn-dialog-cancel');
+
+                titleEl.innerText = title;
+                msgEl.innerText = message;
+                
+                if (isConfirm) {
+                    btnCancel.classList.remove('hidden');
+                } else {
+                    btnCancel.classList.add('hidden');
+                }
+
+                modal.classList.remove('hidden');
+
+                const cleanup = () => {
+                    btnOk.removeEventListener('click', onOk);
+                    btnCancel.removeEventListener('click', onCancel);
+                    modal.classList.add('hidden');
+                };
+
+                const onOk = () => { cleanup(); resolve(true); };
+                const onCancel = () => { cleanup(); resolve(false); };
+
+                btnOk.addEventListener('click', onOk);
+                btnCancel.addEventListener('click', onCancel);
+            });
+        };
+
+        window.toggleInputPasswordVisibility = function(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
             const icon = btn.querySelector('i');
-            if (input.type === 'password') { input.type = 'text'; icon.className = 'fas fa-eye-slash text-xs'; }
-            else { input.type = 'password'; icon.className = 'fas fa-eye text-xs'; }
-        };
-
-        window.togglePasswordDisplay = function(serviceId) {
-            visiblePasswords[serviceId] = !visiblePasswords[serviceId];
-            window.renderCustomers();
-            if (!document.getElementById('tab-accounts').classList.contains('hidden')) window.renderAccountsTab();
-        };
-
-        window.openCustomerModal = function(custId = null) {
-            document.getElementById('cust-error').classList.add('hidden');
-            if (custId) {
-                const c = customers.find(x => x.id === custId);
-                document.getElementById('modal-customer-title').innerText = "Sửa Khách Hàng";
-                document.getElementById('cust-id').value = c.id;
-                document.getElementById('cust-name').value = c.name;
-                document.getElementById('cust-phone').value = c.phone;
-                document.getElementById('cust-email').value = c.email;
-                document.getElementById('cust-note').value = c.note || '';
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash text-emerald-600';
             } else {
-                document.getElementById('modal-customer-title').innerText = "Thêm Khách Hàng";
-                document.getElementById('form-customer').reset();
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        };
+
+        window.togglePasswordCell = function(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            const isHidden = el.getAttribute('data-hidden') === 'true';
+            const realVal = el.getAttribute('data-value');
+            if (isHidden) {
+                el.innerText = realVal;
+                el.setAttribute('data-hidden', 'false');
+            } else {
+                el.innerText = '••••••••';
+                el.setAttribute('data-hidden', 'true');
+            }
+        };
+
+        // COPY TO CLIPBOARD WITH TEXTAREA FALLBACK
+        window.copyToClipboard = function(text, successMsg = "Đã sao chép vào bộ nhớ tạm!") {
+            if (!text) return;
+            try {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                window.showToast(successMsg);
+            } catch (err) {
+                window.showToast("Không thể sao chép tự động!", false);
+            }
+        };
+
+        // EXACT ZALO COPY FORMAT (NO [Đã TT] TAGS)
+        window.copyZaloFormat = function(custId) {
+            const cust = customers.find(c => c.id === custId);
+            if (!cust) return;
+
+            let text = `📌 THÔNG TIN DỊCH VỤ - ${cust.name.toUpperCase()}\n`;
+            text += `📞 SĐT: ${cust.phone || 'Chưa cập nhật'}\n`;
+            text += `-------------------\n`;
+
+            if (!cust.services || cust.services.length === 0) {
+                text += `(Chưa có dịch vụ nào được đăng ký)`;
+            } else {
+                cust.services.forEach(s => {
+                    const urlPart = s.url ? ` (${s.url})` : '';
+                    text += `└ 🔑 ${s.name}${urlPart}\n`;
+                    text += ` - TK: ${s.account || 'N/A'}\n`;
+                    
+                    if (s.loginType === 'google') {
+                        text += ` - Đăng nhập: Google Login\n`;
+                    } else if (s.loginType === 'token') {
+                        text += ` - Token/Key: ${s.password || 'N/A'}\n`;
+                    } else {
+                        text += ` - MK/Xác thực: ${s.password || 'N/A'}\n`;
+                    }
+                });
+            }
+
+            window.copyToClipboard(text, `Đã copy định dạng Zalo cho khách ${cust.name}!`);
+        };
+
+        window.saveDataToStorage = async function() {
+            await saveToDB(customers);
+        };
+
+        window.switchTab = function(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-emerald-600', 'text-white', 'shadow-md', 'shadow-emerald-900/20');
+                el.classList.add('hover:bg-gray-800', 'hover:text-white');
+            });
+
+            const activeContent = document.getElementById(`tab-${tabName}`);
+            const activeNav = document.getElementById(`nav-${tabName}`);
+
+            if (activeContent) activeContent.classList.remove('hidden');
+            if (activeNav) {
+                activeNav.classList.add('bg-emerald-600', 'text-white', 'shadow-md', 'shadow-emerald-900/20');
+                activeNav.classList.remove('hover:bg-gray-800', 'hover:text-white');
+            }
+
+            const titles = {
+                dashboard: 'Tổng Quan Hệ Thống',
+                customers: 'Quản Lý Khách Hàng & Dịch Vụ',
+                accounts: 'Danh Sách Tất Cả Tài Khoản Dịch Vụ',
+                debts: 'Sổ Thu Chi & Công Nợ Chưa Thanh Toán'
+            };
+            document.getElementById('page-title').innerText = titles[tabName] || 'CRM Manager';
+
+            if (tabName === 'dashboard') window.updateDashboardStats();
+            if (tabName === 'customers') window.renderCustomers();
+            if (tabName === 'accounts') window.renderAccountsTab();
+            if (tabName === 'debts') window.renderDebtsTab();
+        };
+
+        window.updateDashboardStats = function() {
+            let totalCustomers = customers.length;
+            let activeServices = 0;
+            let totalRevenue = 0;
+            let unpaidAmount = 0;
+
+            const now = new Date();
+            const thirtyDaysFromNow = new Date();
+            thirtyDaysFromNow.setDate(now.getDate() + 30);
+
+            const expiringServices = [];
+
+            customers.forEach(c => {
+                (c.services || []).forEach(s => {
+                    activeServices++;
+                    const price = parseFloat(s.price) || 0;
+                    
+                    if (s.paid) {
+                        totalRevenue += price;
+                    } else {
+                        unpaidAmount += price;
+                    }
+
+                    if (s.durationType === 'fixed' && s.expiry) {
+                        const expDate = new Date(s.expiry);
+                        if (expDate >= now && expDate <= thirtyDaysFromNow) {
+                            expiringServices.push({ customerName: c.name, customerPhone: c.phone, ...s });
+                        }
+                    }
+                });
+            });
+
+            document.getElementById('stat-total-customers').innerText = totalCustomers;
+            document.getElementById('stat-active-services').innerText = activeServices;
+            document.getElementById('stat-total-revenue').innerText = totalRevenue.toLocaleString('vi-VN') + ' đ';
+            document.getElementById('stat-unpaid-amount').innerText = unpaidAmount.toLocaleString('vi-VN') + ' đ';
+
+            // Expiring list rendering
+            const expiringListContainer = document.getElementById('expiring-services-list');
+            document.getElementById('expiring-count-badge').innerText = expiringServices.length;
+
+            if (expiringServices.length === 0) {
+                expiringListContainer.innerHTML = '<p class="text-sm text-gray-400 text-center py-6">Không có dịch vụ nào sắp hết hạn trong 30 ngày tới.</p>';
+            } else {
+                expiringListContainer.innerHTML = expiringServices.map(s => `
+                    <div class="flex items-center justify-between p-3 bg-amber-50/60 border border-amber-200/60 rounded-xl text-sm">
+                        <div>
+                            <span class="font-bold text-gray-800">${s.name}</span>
+                            <p class="text-xs text-gray-500">${s.customerName} (${s.customerPhone})</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="inline-block px-2 py-0.5 bg-amber-200 text-amber-900 rounded font-semibold text-xs">
+                                Hạn: ${s.expiry}
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        };
+
+        window.renderCustomers = function() {
+            const container = document.getElementById('customers-list-container');
+            const searchKeyword = (document.getElementById('search-customer-input')?.value || '').toLowerCase().trim();
+            const filterStatus = document.getElementById('filter-status-select')?.value || 'all';
+
+            let filtered = customers.filter(c => {
+                const nameMatch = c.name.toLowerCase().includes(searchKeyword);
+                const phoneMatch = (c.phone || '').includes(searchKeyword);
+                const emailMatch = (c.email || '').toLowerCase().includes(searchKeyword);
+                return nameMatch || phoneMatch || emailMatch;
+            });
+
+            if (filterStatus === 'has_services') {
+                filtered = filtered.filter(c => c.services && c.services.length > 0);
+            } else if (filterStatus === 'unpaid') {
+                filtered = filtered.filter(c => c.services && c.services.some(s => !s.paid));
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white rounded-2xl p-12 text-center border border-gray-100 shadow-sm">
+                        <i class="fas fa-folder-open text-4xl text-gray-300 mb-3"></i>
+                        <p class="text-gray-500 font-medium">Không tìm thấy khách hàng nào phù hợp.</p>
+                        <button onclick="window.openCustomerModal()" class="mt-4 px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-semibold">Thêm khách hàng đầu tiên</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(c => {
+                const services = c.services || [];
+                const unpaidCount = services.filter(s => !s.paid).length;
+
+                return `
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:border-gray-200 transition">
+                        <!-- Customer Header Bar -->
+                        <div class="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 bg-gray-50/50">
+                            <div class="flex items-start space-x-3.5">
+                                <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-lg flex-shrink-0">
+                                    ${c.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <div class="flex items-center space-x-2 flex-wrap">
+                                        <h3 class="font-bold text-gray-800 text-base">${c.name}</h3>
+                                        ${unpaidCount > 0 ? `<span class="px-2 py-0.5 bg-rose-100 text-rose-700 text-[11px] font-bold rounded-full">Nợ ${unpaidCount} dịch vụ</span>` : ''}
+                                    </div>
+                                    <div class="flex items-center space-x-4 text-xs text-gray-500 mt-1 flex-wrap gap-y-1">
+                                        <span><i class="fas fa-phone mr-1 text-gray-400"></i>${c.phone || 'Chưa có SĐT'}</span>
+                                        ${c.email ? `<span><i class="fas fa-envelope mr-1 text-gray-400"></i>${c.email}</span>` : ''}
+                                    </div>
+                                    ${c.note ? `<p class="text-xs text-gray-400 italic mt-1">${c.note}</p>` : ''}
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="flex items-center space-x-2 self-end md:self-auto flex-wrap gap-y-2">
+                                <button onclick="window.copyZaloFormat('${c.id}')" class="px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition">
+                                    <i class="fas fa-copy"></i>
+                                    <span>Copy Zalo</span>
+                                </button>
+                                <button onclick="window.openServiceModal('${c.id}')" class="px-3 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition">
+                                    <i class="fas fa-plus"></i>
+                                    <span>Thêm DV</span>
+                                </button>
+                                <button onclick="window.openCustomerModal('${c.id}')" class="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg" title="Sửa thông tin khách">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="window.deleteCustomer('${c.id}')" class="p-1.5 text-gray-400 hover:text-rose-600 rounded-lg" title="Xóa khách hàng">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Services Nested List -->
+                        <div class="p-5">
+                            ${services.length === 0 ? `
+                                <p class="text-xs text-gray-400 italic text-center py-2">Khách hàng chưa đăng ký dịch vụ nào.</p>
+                            ` : `
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    ${services.map(s => {
+                                        const pwCellId = `pw_cust_${c.id}_${s.id}`;
+                                        const isGoogle = s.loginType === 'google';
+                                        const isToken = s.loginType === 'token';
+                                        
+                                        return `
+                                            <div class="p-3.5 bg-gray-50 rounded-xl border border-gray-200/70 text-xs space-y-2 relative group">
+                                                <div class="flex items-center justify-between pb-2 border-b border-gray-200">
+                                                    <span class="font-bold text-gray-800 flex items-center space-x-1.5">
+                                                        <i class="fas fa-cube text-emerald-600"></i>
+                                                        <span>${s.name}</span>
+                                                    </span>
+                                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold ${s.paid ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                                                        ${s.paid ? 'Đã TT' : 'Chưa TT'}
+                                                    </span>
+                                                </div>
+
+                                                <div class="space-y-1 text-gray-600">
+                                                    ${s.url ? `<p class="truncate"><i class="fas fa-link mr-1 text-gray-400"></i><a href="${s.url}" target="_blank" class="text-blue-600 underline">${s.url}</a></p>` : ''}
+                                                    <p class="truncate"><i class="fas fa-user mr-1 text-gray-400"></i><strong>TK:</strong> ${s.account || 'N/A'}</p>
+                                                    
+                                                    ${isGoogle ? `
+                                                        <p class="text-blue-600 font-medium"><i class="fab fa-google mr-1"></i>Đăng nhập bằng Google</p>
+                                                    ` : `
+                                                        <div class="flex items-center space-x-1.5">
+                                                            <i class="fas fa-key text-gray-400"></i>
+                                                            <strong>${isToken ? 'Token:' : 'MK:'}</strong>
+                                                            <span id="${pwCellId}" data-hidden="true" data-value="${s.password || ''}" class="font-mono bg-white px-1.5 py-0.5 rounded border border-gray-200">••••••••</span>
+                                                            <button onclick="window.togglePasswordCell('${pwCellId}')" class="text-gray-400 hover:text-gray-600 px-1">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                            <button onclick="window.copyToClipboard('${s.password || ''}', 'Đã copy mật khẩu!')" class="text-gray-400 hover:text-emerald-600 px-1" title="Copy mật khẩu">
+                                                                <i class="fas fa-copy"></i>
+                                                            </button>
+                                                        </div>
+                                                    `}
+
+                                                    <div class="flex items-center justify-between pt-1 text-[11px] text-gray-500">
+                                                        <span>Hạn: ${s.durationType === 'lifetime' ? '<strong class="text-emerald-600">Vĩnh viễn</strong>' : (s.expiry || 'N/A')}</span>
+                                                        <span class="font-bold text-gray-700">${(parseFloat(s.price) || 0).toLocaleString('vi-VN')} đ</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex items-center justify-end space-x-2 pt-2 border-t border-gray-200/80">
+                                                    <button onclick="window.openServiceModal('${c.id}', '${s.id}')" class="text-gray-500 hover:text-emerald-600 text-[11px] font-medium">Sửa</button>
+                                                    <button onclick="window.deleteService('${c.id}', '${s.id}')" class="text-gray-400 hover:text-rose-600 text-[11px] font-medium">Xóa</button>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        window.renderAccountsTab = function() {
+            const tbody = document.getElementById('accounts-table-body');
+            const searchKeyword = (document.getElementById('search-account-input')?.value || '').toLowerCase().trim();
+
+            let allAccounts = [];
+            customers.forEach(c => {
+                (c.services || []).forEach(s => {
+                    allAccounts.push({
+                        customerId: c.id,
+                        customerName: c.name,
+                        customerPhone: c.phone,
+                        ...s
+                    });
+                });
+            });
+
+            if (searchKeyword) {
+                allAccounts = allAccounts.filter(a => 
+                    a.name.toLowerCase().includes(searchKeyword) ||
+                    a.account.toLowerCase().includes(searchKeyword) ||
+                    a.customerName.toLowerCase().includes(searchKeyword)
+                );
+            }
+
+            document.getElementById('accounts-count-tag').innerText = `Hiển thị ${allAccounts.length} tài khoản`;
+
+            if (allAccounts.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="px-5 py-8 text-center text-gray-400">Không tìm thấy tài khoản dịch vụ nào.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = allAccounts.map((a, idx) => {
+                const cellPwId = `table_pw_${idx}`;
+                const isGoogle = a.loginType === 'google';
+                const isToken = a.loginType === 'token';
+
+                return `
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-5 py-3.5 font-medium text-gray-800">
+                            ${a.customerName}
+                            <div class="text-xs text-gray-400 font-normal">${a.customerPhone || ''}</div>
+                        </td>
+                        <td class="px-5 py-3.5">
+                            <span class="font-bold text-gray-700">${a.name}</span>
+                            ${a.url ? `<a href="${a.url}" target="_blank" class="block text-xs text-blue-600 truncate max-w-[150px]">${a.url}</a>` : ''}
+                        </td>
+                        <td class="px-5 py-3.5">
+                            ${isGoogle ? `<span class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs font-semibold"><i class="fab fa-google mr-1"></i>Google Login</span>` :
+                              isToken ? `<span class="px-2 py-0.5 bg-amber-50 text-amber-700 rounded text-xs font-semibold">Token/Key</span>` :
+                              `<span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-xs font-semibold">Mật khẩu</span>`}
+                        </td>
+                        <td class="px-5 py-3.5 font-mono text-xs">
+                            ${a.account || 'N/A'}
+                            <button onclick="window.copyToClipboard('${a.account || ''}')" class="ml-1 text-gray-400 hover:text-emerald-600" title="Copy tài khoản"><i class="fas fa-copy"></i></button>
+                        </td>
+                        <td class="px-5 py-3.5">
+                            ${isGoogle ? `<span class="text-xs text-gray-400 italic">Không dùng MK</span>` : `
+                                <div class="flex items-center space-x-1.5">
+                                    <span id="${cellPwId}" data-hidden="true" data-value="${a.password || ''}" class="font-mono text-xs bg-gray-100 px-2 py-0.5 rounded border border-gray-200">••••••••</span>
+                                    <button onclick="window.togglePasswordCell('${cellPwId}')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-eye"></i></button>
+                                    <button onclick="window.copyToClipboard('${a.password || ''}')" class="text-gray-400 hover:text-emerald-600"><i class="fas fa-copy"></i></button>
+                                </div>
+                            `}
+                        </td>
+                        <td class="px-5 py-3.5 text-xs">
+                            ${a.durationType === 'lifetime' ? '<span class="text-emerald-600 font-bold">Vĩnh viễn</span>' : (a.expiry || 'N/A')}
+                        </td>
+                        <td class="px-5 py-3.5 text-right space-x-2">
+                            <button onclick="window.openServiceModal('${a.customerId}', '${a.id}')" class="text-emerald-600 hover:text-emerald-800 text-xs font-semibold">Sửa</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        };
+
+        window.renderDebtsTab = function() {
+            const tbody = document.getElementById('debts-table-body');
+            let unpaidList = [];
+
+            customers.forEach(c => {
+                (c.services || []).forEach(s => {
+                    if (!s.paid) {
+                        unpaidList.push({
+                            customerId: c.id,
+                            customerName: c.name,
+                            customerPhone: c.phone,
+                            ...s
+                        });
+                    }
+                });
+            });
+
+            if (unpaidList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="px-5 py-12 text-center text-gray-400">🎉 Tuyệt vời! Không có công nợ nào chưa thanh toán.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = unpaidList.map(item => `
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-5 py-3.5 font-bold text-gray-800">${item.customerName}</td>
+                    <td class="px-5 py-3.5 text-gray-600">${item.customerPhone || 'N/A'}</td>
+                    <td class="px-5 py-3.5 font-semibold text-gray-700">${item.name}</td>
+                    <td class="px-5 py-3.5 font-bold text-rose-600">${(parseFloat(item.price) || 0).toLocaleString('vi-VN')} đ</td>
+                    <td class="px-5 py-3.5 text-xs text-gray-500">${item.durationType === 'lifetime' ? 'Vĩnh viễn' : (item.expiry || 'N/A')}</td>
+                    <td class="px-5 py-3.5 text-right">
+                        <button onclick="window.markServiceAsPaid('${item.customerId}', '${item.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition shadow-sm">
+                            <i class="fas fa-check mr-1"></i>Đánh Dấu Đã Thanh Toán
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        };
+
+        window.openCustomerModal = function(id = null) {
+            const modal = document.getElementById('modal-customer');
+            document.getElementById('form-customer').reset();
+            
+            if (id) {
+                const c = customers.find(x => x.id === id);
+                if (c) {
+                    document.getElementById('modal-customer-title').innerText = "Chỉnh Sửa Khách Hàng";
+                    document.getElementById('cust-id').value = c.id;
+                    document.getElementById('cust-name').value = c.name;
+                    document.getElementById('cust-phone').value = c.phone;
+                    document.getElementById('cust-email').value = c.email || '';
+                    document.getElementById('cust-note').value = c.note || '';
+                }
+            } else {
+                document.getElementById('modal-customer-title').innerText = "Thêm Khách Hàng Mới";
                 document.getElementById('cust-id').value = '';
             }
-            document.getElementById('modal-customer').classList.remove('hidden');
+            
+            modal.classList.remove('hidden');
         };
 
-        window.closeCustomerModal = function() { document.getElementById('modal-customer').classList.add('hidden'); };
+        window.closeCustomerModal = function() {
+            document.getElementById('modal-customer').classList.add('hidden');
+        };
 
-        window.saveCustomer = async function(event) {
-            event.preventDefault();
+        window.saveCustomer = async function(e) {
+            e.preventDefault();
             if (isSaving) return;
             isSaving = true;
 
@@ -640,397 +1078,300 @@
             const phone = document.getElementById('cust-phone').value.trim();
             const email = document.getElementById('cust-email').value.trim();
             const note = document.getElementById('cust-note').value.trim();
-            const errEl = document.getElementById('cust-error');
-
-            const dupPhone = customers.find(c => c.phone === phone && c.id !== id);
-            if (dupPhone) { 
-                errEl.innerText = `SĐT đã tồn tại ở khách "${dupPhone.name}"`; 
-                errEl.classList.remove('hidden'); 
-                isSaving = false;
-                return; 
-            }
 
             if (id) {
-                const idx = customers.findIndex(c => c.id === id);
-                if (idx !== -1) customers[idx] = { ...customers[idx], name, phone, email, note };
+                const c = customers.find(x => x.id === id);
+                if (c) {
+                    c.name = name;
+                    c.phone = phone;
+                    c.email = email;
+                    c.note = note;
+                }
             } else {
-                customers.unshift({ id: 'C_' + Date.now(), name, phone, email, note, services: [] });
+                const newCustomer = {
+                    id: 'cust_' + Date.now(),
+                    name,
+                    phone,
+                    email,
+                    note,
+                    services: []
+                };
+                customers.unshift(newCustomer);
             }
 
-            await window.saveDataToStorage(); 
-            window.renderCustomers(); 
+            await window.saveDataToStorage();
             window.closeCustomerModal();
-            window.showToast(id ? "Đã sửa thành công!" : "Đã thêm khách hàng!");
+            window.switchTab(currentTab);
+            window.showToast(id ? "Đã cập nhật khách hàng!" : "Thêm khách hàng mới thành công!");
             isSaving = false;
         };
 
         window.deleteCustomer = async function(id) {
-            if (confirm("Xóa khách hàng và toàn bộ dịch vụ của họ?")) {
+            if (await window.showDialog("Bạn có chắc chắn muốn xóa khách hàng này cùng toàn bộ dịch vụ của họ?", true, "Xác nhận xóa")) {
                 customers = customers.filter(c => c.id !== id);
-                await window.saveDataToStorage(); 
-                window.renderCustomers(); 
-                window.showToast("Đã xóa!");
+                await window.saveDataToStorage();
+                window.switchTab(currentTab);
+                window.showToast("Đã xóa khách hàng!");
+            }
+        };
+
+        window.openServiceModal = function(custId, servId = null) {
+            const modal = document.getElementById('modal-service');
+            document.getElementById('form-service').reset();
+            document.getElementById('serv-cust-id').value = custId;
+            document.getElementById('serv-id').value = servId || '';
+
+            if (servId) {
+                const c = customers.find(x => x.id === custId);
+                const s = c ? (c.services || []).find(x => x.id === servId) : null;
+                if (s) {
+                    document.getElementById('modal-service-title').innerText = "Chỉnh Sửa Dịch Vụ";
+                    document.getElementById('serv-name').value = s.name;
+                    document.getElementById('serv-url').value = s.url || '';
+                    document.getElementById('serv-login-type').value = s.loginType || 'email_password';
+                    document.getElementById('serv-account').value = s.account || '';
+                    document.getElementById('serv-password').value = s.password || '';
+                    document.getElementById('serv-duration-type').value = s.durationType || 'fixed';
+                    document.getElementById('serv-expiry').value = s.expiry || '';
+                    document.getElementById('serv-price').value = s.price || 0;
+                    document.getElementById('serv-paid').value = s.paid ? "true" : "false";
+                }
+            } else {
+                document.getElementById('modal-service-title').innerText = "Thêm Dịch Vụ Mới";
+            }
+
+            window.onLoginTypeChange();
+            window.toggleExpiryField();
+            modal.classList.remove('hidden');
+        };
+
+        window.closeServiceModal = function() {
+            document.getElementById('modal-service').classList.add('hidden');
+        };
+
+        window.onLoginTypeChange = function() {
+            const loginType = document.getElementById('serv-login-type').value;
+            const pwContainer = document.getElementById('container-serv-password');
+            const googleNote = document.getElementById('container-google-note');
+            const lblAccount = document.getElementById('lbl-serv-account');
+            const lblPassword = document.getElementById('lbl-serv-password');
+
+            if (loginType === 'google') {
+                pwContainer.classList.add('hidden');
+                googleNote.classList.remove('hidden');
+                lblAccount.innerText = "Tài Khoản Google";
+            } else {
+                pwContainer.classList.remove('hidden');
+                googleNote.classList.add('hidden');
+                if (loginType === 'token') {
+                    lblAccount.innerText = "Tài Khoản / ID Dịch Vụ";
+                    lblPassword.innerText = "Mã Access Token / API Key";
+                } else {
+                    lblAccount.innerText = "Tài Khoản / Email Đăng Nhập";
+                    lblPassword.innerText = "Mật Khẩu Đăng Nhập";
+                }
             }
         };
 
         window.toggleExpiryField = function() {
-            const isLifetime = document.getElementById('service-type').value === 'lifetime';
-            document.getElementById('field-expiry-container').classList.toggle('hidden', isLifetime);
-        };
-
-        window.toggleLoginTypeFields = function() {
-            const loginType = document.getElementById('service-login-type').value;
-            const isGoogle = loginType === 'google';
-            const isMultiple = loginType === 'multiple';
-
-            const passContainer = document.getElementById('field-password-container');
-            const googleNotice = document.getElementById('google-login-notice');
-
-            passContainer.classList.remove('hidden');
-            googleNotice.classList.add('hidden');
-
-            if (isGoogle) {
-                passContainer.classList.add('hidden');
-                googleNotice.classList.remove('hidden');
-            }
-
-            document.getElementById('single-login-fields').classList.toggle('hidden', isMultiple);
-            document.getElementById('multiple-login-fields').classList.toggle('hidden', !isMultiple);
-
-            if (isMultiple) {
-                const container = document.getElementById('credentials-container');
-                if (container && container.children.length === 0) {
-                    window.addCredentialRow('Mật khẩu', '', '');
-                }
-            }
-        };
-
-        window.addCredentialRow = function(type = 'Mật khẩu', account = '', password = '') {
-            const container = document.getElementById('credentials-container');
-            const div = document.createElement('div');
-            div.className = 'grid grid-cols-12 gap-2 items-center bg-white p-2 rounded border border-gray-200 shadow-sm credential-row';
-            div.innerHTML = `
-                <div class="col-span-3">
-                    <select class="cred-type w-full px-2 py-1 text-xs border rounded bg-white">
-                        <option value="Mật khẩu" ${type==='Mật khẩu'?'selected':''}>Mật khẩu</option>
-                        <option value="Token" ${type==='Token'?'selected':''}>Token</option>
-                        <option value="Google" ${type==='Google'?'selected':''}>Google Login</option>
-                        <option value="Cookie" ${type==='Cookie'?'selected':''}>Cookie</option>
-                    </select>
-                </div>
-                <div class="col-span-4">
-                    <input type="text" placeholder="Tài khoản" value="${account}" class="cred-account w-full px-2 py-1 text-xs border rounded">
-                </div>
-                <div class="col-span-4">
-                    <input type="text" placeholder="Mật khẩu/Token" value="${password}" class="cred-password w-full px-2 py-1 text-xs border rounded">
-                </div>
-                <div class="col-span-1 text-center">
-                    <button type="button" onclick="this.closest('.credential-row').remove()" class="text-rose-500 text-xs p-1"><i class="fas fa-trash"></i></button>
-                </div>
-            `;
-            container.appendChild(div);
-        };
-
-        window.openServiceModal = function(custId, serviceId = null) {
-            document.getElementById('service-cust-id').value = custId;
-            document.getElementById('service-id').value = serviceId || '';
-            document.getElementById('credentials-container').innerHTML = '';
-
-            if (serviceId) {
-                const c = customers.find(x => x.id === custId);
-                const s = c ? c.services.find(s => s.id === serviceId) : null;
-                if (s) {
-                    document.getElementById('modal-service-title').innerText = "Sửa Dịch Vụ";
-                    document.getElementById('service-name').value = s.name;
-                    document.getElementById('service-url').value = s.url || '';
-                    document.getElementById('service-login-type').value = s.loginType || 'normal';
-                    document.getElementById('service-account').value = s.account || '';
-                    document.getElementById('service-password').value = s.password || '';
-                    document.getElementById('service-type').value = s.serviceType || 'fixed';
-                    document.getElementById('service-expiry').value = s.expiryDate || '';
-                    document.getElementById('service-price').value = s.price || 0;
-                    document.getElementById('service-is-paid').value = s.isPaid ? "true" : "false";
-
-                    if (s.loginType === 'multiple' && Array.isArray(s.credentials)) {
-                        s.credentials.forEach(cr => {
-                            window.addCredentialRow(cr.type, cr.account, cr.password);
-                        });
-                    }
-                }
+            const durType = document.getElementById('serv-duration-type').value;
+            const container = document.getElementById('container-expiry-date');
+            if (durType === 'lifetime') {
+                container.classList.add('hidden');
             } else {
-                document.getElementById('modal-service-title').innerText = "Thêm Dịch Vụ";
-                document.getElementById('form-service').reset();
-                window.addCredentialRow('Mật khẩu', '', '');
+                container.classList.remove('hidden');
             }
-            window.toggleExpiryField(); 
-            window.toggleLoginTypeFields();
-            document.getElementById('modal-service').classList.remove('hidden');
         };
 
-        window.closeServiceModal = function() { document.getElementById('modal-service').classList.add('hidden'); };
-
-        window.saveService = async function(event) {
-            event.preventDefault();
+        window.saveService = async function(e) {
+            e.preventDefault();
             if (isSaving) return;
             isSaving = true;
 
-            const custId = document.getElementById('service-cust-id').value;
-            const sId = document.getElementById('service-id').value;
-            const loginType = document.getElementById('service-login-type').value;
-            const type = document.getElementById('service-type').value;
+            const custId = document.getElementById('serv-cust-id').value;
+            const servId = document.getElementById('serv-id').value;
+            const customer = customers.find(c => c.id === custId);
 
-            let credentials = [];
-            if (loginType === 'multiple') {
-                document.querySelectorAll('.credential-row').forEach(row => {
-                    credentials.push({
-                        type: row.querySelector('.cred-type').value.trim(),
-                        account: row.querySelector('.cred-account').value.trim(),
-                        password: row.querySelector('.cred-password').value.trim()
-                    });
-                });
+            if (!customer) {
+                window.showToast("Không tìm thấy khách hàng!", false);
+                isSaving = false;
+                return;
             }
+
+            if (!customer.services) customer.services = [];
 
             const serviceData = {
-                id: sId || ('S_' + Date.now()),
-                name: document.getElementById('service-name').value.trim(),
-                url: document.getElementById('service-url').value.trim(),
-                loginType,
-                account: loginType === 'multiple' ? '' : document.getElementById('service-account').value.trim(),
-                password: (loginType === 'google' || loginType === 'multiple') ? '' : document.getElementById('service-password').value.trim(),
-                credentials,
-                serviceType: type,
-                expiryDate: type === 'lifetime' ? '' : document.getElementById('service-expiry').value,
-                price: Number(document.getElementById('service-price').value) || 0,
-                isPaid: document.getElementById('service-is-paid').value === "true"
+                id: servId || ('serv_' + Date.now()),
+                name: document.getElementById('serv-name').value.trim(),
+                url: document.getElementById('serv-url').value.trim(),
+                loginType: document.getElementById('serv-login-type').value,
+                account: document.getElementById('serv-account').value.trim(),
+                password: document.getElementById('serv-password').value.trim(),
+                durationType: document.getElementById('serv-duration-type').value,
+                expiry: document.getElementById('serv-expiry').value,
+                price: parseFloat(document.getElementById('serv-price').value) || 0,
+                paid: document.getElementById('serv-paid').value === 'true'
             };
 
-            const c = customers.find(x => x.id === custId);
-            if (c) {
-                if (!c.services) c.services = [];
-                if (sId) {
-                    const idx = c.services.findIndex(s => s.id === sId);
-                    if (idx !== -1) c.services[idx] = serviceData;
-                } else {
-                    c.services.push(serviceData);
-                }
+            if (servId) {
+                const idx = customer.services.findIndex(s => s.id === servId);
+                if (idx !== -1) customer.services[idx] = serviceData;
+            } else {
+                customer.services.push(serviceData);
             }
 
-            await window.saveDataToStorage(); 
-            window.renderCustomers(); 
-            window.closeServiceModal(); 
-            window.showToast("Đã lưu dịch vụ!");
+            await window.saveDataToStorage();
+            window.closeServiceModal();
+            window.switchTab(currentTab);
+            window.showToast("Đã lưu dịch vụ thành công!");
             isSaving = false;
         };
 
-        window.deleteService = async function(cId, sId) {
-            if (confirm("Xóa dịch vụ này?")) {
-                const c = customers.find(x => x.id === cId);
+        window.deleteService = async function(custId, servId) {
+            if (await window.showDialog("Bạn có chắc chắn muốn xóa dịch vụ này?", true, "Xác nhận xóa")) {
+                const c = customers.find(x => x.id === custId);
                 if (c && c.services) {
-                    c.services = c.services.filter(s => s.id !== sId);
+                    c.services = c.services.filter(s => s.id !== servId);
                     await window.saveDataToStorage();
-                    window.renderCustomers();
+                    window.switchTab(currentTab);
                     window.showToast("Đã xóa dịch vụ!");
                 }
             }
         };
 
-        window.markServiceAsPaid = async function(cId, sId) {
-            const c = customers.find(x => x.id === cId);
-            if (c && c.services) {
-                const s = c.services.find(x => x.id === sId);
-                if (s) {
-                    s.isPaid = true;
-                    await window.saveDataToStorage();
-                    window.renderCustomers();
-                    window.renderDebtsTab();
-                    window.showToast("Đã xác nhận thanh toán công nợ!");
-                }
-            }
-        };
-
-        window.copyZaloFormat = function(custId) {
+        window.markServiceAsPaid = async function(custId, servId) {
             const c = customers.find(x => x.id === custId);
-            if (!c) return;
-
-            let msg = `📌 THÔNG TIN DỊCH VỤ - ${c.name.toUpperCase()}\n📞 SĐT: ${c.phone}\n-------------------\n`;
-            if (!c.services || c.services.length === 0) {
-                msg += `(Chưa có dịch vụ nào)`;
-            } else {
-                c.services.forEach(s => {
-                    const urlPart = s.url ? ` (${s.url})` : '';
-                    msg += `└ 🔑 ${s.name}${urlPart}\n`;
-                    if (s.loginType === 'multiple' && s.credentials && s.credentials.length > 0) {
-                        s.credentials.forEach(cr => {
-                            msg += `   ▪ [${cr.type}] TK: ${cr.account || '---'} | MK: ${cr.password || '---'}\n`;
-                        });
-                    } else if (s.loginType === 'google') {
-                        msg += `   - Đăng nhập: Google Login (${s.account || 'Chưa cập nhật'})\n`;
-                    } else {
-                        msg += `   - TK: ${s.account || 'Chưa cập nhật'}\n`;
-                        msg += `   - MK: ${s.password || 'Chưa có'}\n`;
-                    }
-                });
+            if (c && c.services) {
+                const s = c.services.find(x => x.id === servId);
+                if (s) {
+                    s.paid = true;
+                    await window.saveDataToStorage();
+                    window.switchTab(currentTab);
+                    window.showToast("Đã đánh dấu hoàn tất thanh toán!");
+                }
             }
-
-            const textArea = document.createElement("textarea");
-            textArea.value = msg;
-            textArea.style.position = "fixed"; 
-            textArea.style.left = "-9999px";
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                window.showToast("Đã copy mẫu Zalo thành công!");
-            } catch (err) {
-                window.showToast("Trình duyệt không hỗ trợ copy tự động!", false);
-            }
-            document.body.removeChild(textArea);
         };
 
-        window.renderCustomers = function() {
-            const searchEl = document.getElementById('search-customer');
-            const search = searchEl ? searchEl.value.toLowerCase().trim() : '';
-            const container = document.getElementById('customer-list');
-            if (!container) return;
-            container.innerHTML = '';
-            
-            const filtered = customers.filter(c => c.name.toLowerCase().includes(search) || c.phone.includes(search) || c.email.toLowerCase().includes(search));
-            const countEl = document.getElementById('customer-count');
-            if (countEl) countEl.innerText = filtered.length;
-
-            filtered.forEach(c => {
-                if (!c.services) c.services = [];
-                const totalDebt = c.services.filter(s => !s.isPaid).reduce((sum, s) => sum + (Number(s.price) || 0), 0);
-                const html = `
-                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                        <div class="p-4 bg-white border-b flex justify-between items-center gap-3 flex-wrap">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center">${c.name.charAt(0)}</div>
-                                <div>
-                                    <h2 class="font-bold text-gray-800 inline-block mr-2">${c.name}</h2>
-                                    ${totalDebt > 0 ? `<span class="bg-rose-100 text-rose-700 text-xs px-2 py-0.5 rounded-full font-bold">Nợ: ${totalDebt.toLocaleString()} đ</span>` : ''}
-                                    <p class="text-xs text-gray-500 mt-1"><i class="fas fa-phone mr-1"></i>${c.phone} | <i class="fas fa-envelope mr-1"></i>${c.email}</p>
-                                </div>
-                            </div>
-                            <div class="flex space-x-2">
-                                <button onclick="window.copyZaloFormat('${c.id}')" class="bg-blue-600 text-white text-xs px-3 py-1.5 rounded-lg"><i class="fas fa-copy mr-1"></i>Copy Zalo</button>
-                                <button onclick="window.openServiceModal('${c.id}')" class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs px-3 py-1.5 rounded-lg"><i class="fas fa-plus mr-1"></i>Thêm DV</button>
-                                <button onclick="window.openCustomerModal('${c.id}')" class="text-gray-400 hover:text-blue-600 p-2"><i class="fas fa-edit"></i></button>
-                                <button onclick="window.deleteCustomer('${c.id}')" class="text-gray-400 hover:text-rose-600 p-2"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>
-                        <div class="p-4 bg-gray-50">
-                            ${c.services.length === 0 ? '<p class="text-xs text-gray-400">Chưa có dịch vụ.</p>' : 
-                            `<table class="w-full text-left text-xs">
-                                <thead class="text-gray-400 border-b"><th class="pb-2">Dịch Vụ</th><th class="pb-2">URL</th><th class="pb-2">Tài Khoản</th><th class="pb-2">Mật Khẩu</th><th class="pb-2">Trạng Thái</th><th class="pb-2 text-right">Sửa/Xóa</th></thead>
-                                <tbody>
-                                    ${c.services.map(s => {
-                                        let loginDisplay = '';
-                                        let passDisplay = '';
-                                        if (s.loginType === 'multiple' && s.credentials && s.credentials.length > 0) {
-                                            loginDisplay = s.credentials.map(cr => `<div class="mb-0.5"><span class="font-semibold text-gray-600">[${cr.type}]:</span> ${cr.account || ''}</div>`).join('');
-                                            passDisplay = s.credentials.map(cr => `<div class="mb-0.5"><span class="font-semibold text-gray-600">[${cr.type}]:</span> ${visiblePasswords[s.id] ? (cr.password || '---') : '••••••••'}</div>`).join('');
-                                        } else if (s.loginType === 'google') {
-                                            loginDisplay = `<span>${s.account || '-'}</span>`;
-                                            passDisplay = '<span class="text-blue-600 italic font-medium">Google Login</span>';
-                                        } else {
-                                            loginDisplay = `<span>${s.account || '-'}</span>`;
-                                            passDisplay = `<span>${s.password ? (visiblePasswords[s.id] ? s.password : '••••••••') : '-'}</span>`;
-                                        }
-                                        return `
-                                        <tr class="border-b border-gray-100/50">
-                                            <td class="py-2.5 font-bold">${s.name}</td>
-                                            <td class="py-2.5 text-blue-600">${s.url || '-'}</td>
-                                            <td class="py-2.5">${loginDisplay}</td>
-                                            <td class="py-2.5">${passDisplay} ${s.loginType !== 'google' ? `<button onclick="window.togglePasswordDisplay('${s.id}')" class="ml-1 text-gray-400"><i class="fas ${visiblePasswords[s.id] ? 'fa-eye-slash' : 'fa-eye'}"></i></button>` : ''}</td>
-                                            <td class="py-2.5">${s.isPaid ? '<span class="text-emerald-600 font-bold">[Đã TT]</span>' : '<span class="text-rose-600 font-bold">Còn Nợ</span>'}</td>
-                                            <td class="py-2.5 text-right space-x-2">
-                                                <button onclick="window.openServiceModal('${c.id}','${s.id}')" class="text-gray-400 hover:text-blue-600"><i class="fas fa-pen"></i></button>
-                                                <button onclick="window.deleteService('${c.id}','${s.id}')" class="text-gray-400 hover:text-rose-600"><i class="fas fa-trash"></i></button>
-                                            </td>
-                                        </tr>`;
-                                    }).join('')}
-                                </tbody>
-                            </table>`}
-                        </div>
-                    </div>`;
-                container.innerHTML += html;
-            });
+        window.exportDataJSON = function() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(customers, null, 2));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", `CRM_Backup_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(dlAnchorElem);
+            dlAnchorElem.click();
+            dlAnchorElem.remove();
+            window.showToast("Đã xuất file JSON sao lưu thành công!");
         };
 
-        window.renderAccountsTab = function() {
-            const tbody = document.getElementById('accounts-table-body');
-            const searchEl = document.getElementById('search-account');
-            const search = searchEl ? searchEl.value.toLowerCase() : '';
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            
-            customers.forEach(c => {
-                if (c.services) {
-                    c.services.forEach(s => {
-                        if (s.name.toLowerCase().includes(search) || (s.account||'').toLowerCase().includes(search) || c.name.toLowerCase().includes(search)) {
-                            let accText = s.account || '-';
-                            let passText = s.loginType === 'google' ? '<span class="text-blue-600 italic">Google Login</span>' : (s.password ? (visiblePasswords[s.id] ? s.password : '••••••••') : '-');
-                            
-                            if (s.loginType === 'multiple' && s.credentials) {
-                                accText = s.credentials.map(cr => `[${cr.type}]: ${cr.account}`).join('<br>');
-                                passText = s.credentials.map(cr => `[${cr.type}]: ${visiblePasswords[s.id] ? cr.password : '••••••••'}`).join('<br>');
+        window.importDataJSON = async function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (Array.isArray(importedData)) {
+                        // Check for duplicate phone numbers or IDs
+                        let hasDuplicates = false;
+                        for (const imp of importedData) {
+                            if (customers.some(c => (c.id === imp.id) || (imp.phone && c.phone === imp.phone))) {
+                                hasDuplicates = true;
+                                break;
                             }
-
-                            tbody.innerHTML += `
-                                <tr class="hover:bg-gray-50 border-b">
-                                    <td class="p-3">${c.name}</td>
-                                    <td class="p-3 font-bold">${s.name}</td>
-                                    <td class="p-3">${s.loginType === 'multiple' ? 'Nhiều cách' : (s.loginType === 'google' ? 'Google' : 'Mật khẩu')}</td>
-                                    <td class="p-3">${accText}</td>
-                                    <td class="p-3">${passText} ${s.loginType !== 'google' ? `<button onclick="window.togglePasswordDisplay('${s.id}')" class="ml-1 text-gray-400"><i class="fas ${visiblePasswords[s.id] ? 'fa-eye-slash' : 'fa-eye'}"></i></button>` : ''}</td>
-                                    <td class="p-3">${s.serviceType === 'lifetime' ? 'Vĩnh viễn' : (s.expiryDate||'-')}</td>
-                                    <td class="p-3">${s.isPaid ? '<span class="text-emerald-600">[Đã TT]</span>' : '<span class="text-rose-600">Còn Nợ</span>'}</td>
-                                </tr>`;
                         }
-                    });
+
+                        // STRICT DUPLICATE HANDLING WITH MODAL CONFIRMATION
+                        if (hasDuplicates) {
+                            const userConfirmed = await window.showDialog(
+                                "⚠️ Phát hiện có khách hàng bị trùng số điện thoại hoặc ID với dữ liệu hiện tại.\n\n" +
+                                "• Bấm 'Đồng ý' nếu bạn ĐỒNG Ý ghi đè và hợp nhất dữ liệu trùng.\n" +
+                                "• Bấm 'Hủy' để HỦY BỎ hoàn toàn thao tác nhập file này.",
+                                true,
+                                "Xác nhận Ghi Đè Trùng Lặp"
+                            );
+
+                            if (!userConfirmed) {
+                                window.showToast("Đã hủy bỏ thao tác khôi phục dữ liệu.", false);
+                                event.target.value = '';
+                                return;
+                            }
+                        }
+
+                        // Execute merge / overwrite
+                        let addedCount = 0;
+                        let updatedCount = 0;
+
+                        importedData.forEach(imp => {
+                            const existingIndex = customers.findIndex(c => (c.id === imp.id) || (imp.phone && c.phone === imp.phone));
+                            if (existingIndex !== -1) {
+                                // Merge services
+                                const existing = customers[existingIndex];
+                                imp.services = imp.services || [];
+                                existing.services = existing.services || [];
+
+                                imp.services.forEach(newServ => {
+                                    const sIdx = existing.services.findIndex(s => s.id === newServ.id);
+                                    if (sIdx !== -1) {
+                                        existing.services[sIdx] = newServ;
+                                    } else {
+                                        existing.services.push(newServ);
+                                    }
+                                });
+                                updatedCount++;
+                            } else {
+                                customers.push(imp);
+                                addedCount++;
+                            }
+                        });
+
+                        await window.saveDataToStorage();
+                        window.switchTab(currentTab);
+                        window.showToast(`Nhập dữ liệu thành công! Thêm mới: ${addedCount}, Cập nhật: ${updatedCount}.`);
+                    } else {
+                        await window.showDialog("File JSON không đúng định dạng danh sách khách hàng.", false, "Lỗi Import");
+                    }
+                } catch (err) {
+                    await window.showDialog("Lỗi đọc file JSON: " + err.message, false, "Lỗi Import");
                 }
-            });
+            };
+            reader.readAsText(file);
+            event.target.value = '';
         };
 
-        window.renderDebtsTab = function() {
-            const tbody = document.getElementById('debts-table-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            
-            let count = 0;
-            customers.forEach(c => {
-                if (c.services) {
-                    c.services.forEach(s => {
-                        if (!s.isPaid) {
-                            count++;
-                            tbody.innerHTML += `
-                                <tr class="hover:bg-rose-50/50 border-b">
-                                    <td class="p-3 font-medium">${c.name}</td>
-                                    <td class="p-3 text-gray-600">${c.phone}</td>
-                                    <td class="p-3 font-bold">${s.name}</td>
-                                    <td class="p-3 font-bold text-rose-600">${(Number(s.price)||0).toLocaleString()} đ</td>
-                                    <td class="p-3">${s.serviceType === 'lifetime' ? 'Vĩnh viễn' : (s.expiryDate||'-')}</td>
-                                    <td class="p-3">
-                                        <button onclick="window.markServiceAsPaid('${c.id}','${s.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg">
-                                            <i class="fas fa-check mr-1"></i>Đã Thu Tiền
-                                        </button>
-                                    </td>
-                                </tr>`;
-                        }
-                    });
-                }
-            });
-
-            if (count === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-400 italic">Tuyệt vời! Không có khoản công nợ nào chưa thanh toán.</td></tr>`;
+        window.resetToSampleData = async function() {
+            if (await window.showDialog("Đặt lại dữ liệu mẫu sẽ khôi phục danh sách mặc định. Bạn có chắc chắn?", true, "Cảnh báo Reset")) {
+                customers = SAMPLE_CUSTOMERS;
+                await window.saveDataToStorage();
+                window.switchTab(currentTab);
+                window.showToast("Đã đặt lại dữ liệu mẫu!");
             }
         };
 
-        // Start App
-        window.addEventListener('DOMContentLoaded', () => {
-            window.loadDataFromStorage();
-        });
+        window.showPersistentStorageInfo = async function() {
+            const totalClients = customers.length;
+            const totalServices = customers.reduce((acc, c) => acc + (c.services ? c.services.length : 0), 0);
+            await window.showDialog(
+                `Trạng Thái Bộ Nhớ Offline:\n\n` +
+                `- Tổng số Khách Hàng: ${totalClients}\n` +
+                `- Tổng số Dịch Vụ: ${totalServices}\n` +
+                `- Công nghệ: IndexedDB + LocalStorage (Bảo vệ dữ liệu không bị xoá tự động trên trình duyệt này).`,
+                false,
+                "Trạng Thái Hệ Thống"
+            );
+        };
+
+        // INITIALIZATION ON LOAD
+        window.onload = async function() {
+            const loaded = await loadFromDB();
+            if (loaded && loaded.length > 0) {
+                customers = loaded;
+            } else {
+                customers = SAMPLE_CUSTOMERS;
+                await window.saveDataToStorage();
+            }
+            window.switchTab('dashboard');
+        };
     </script>
 </body>
 </html>
