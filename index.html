@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRM Quản Lý Khách Hàng & Dịch Vụ</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
@@ -46,7 +44,6 @@
 </head>
 <body class="bg-gray-100 font-sans antialiased text-gray-800 min-h-screen flex flex-col">
 
-    <!-- MAIN APP CONTAINER -->
     <div id="app-container" class="flex flex-1 min-h-screen relative overflow-x-hidden">
 
         <!-- SIDEBAR -->
@@ -66,19 +63,19 @@
                 <div>
                     <div class="px-3 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider sidebar-label">MENU CHÍNH</div>
                     <div class="space-y-1">
-                        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 hover:text-white">
+                        <button onclick="window.switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 hover:text-white">
                             <i class="fas fa-chart-pie w-5 text-center text-emerald-500"></i>
                             <span class="nav-text">Tổng quan</span>
                         </button>
-                        <button onclick="switchTab('customers')" id="nav-customers" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition bg-emerald-600 text-white shadow-md">
+                        <button onclick="window.switchTab('customers')" id="nav-customers" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition bg-emerald-600 text-white shadow-md">
                             <i class="fas fa-users w-5 text-center"></i>
                             <span class="nav-text">Khách hàng & Dịch vụ</span>
                         </button>
-                        <button onclick="switchTab('accounts')" id="nav-accounts" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 hover:text-white">
+                        <button onclick="window.switchTab('accounts')" id="nav-accounts" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 hover:text-white">
                             <i class="fas fa-key w-5 text-center text-amber-500"></i>
                             <span class="nav-text">Tất cả tài khoản</span>
                         </button>
-                        <button onclick="switchTab('debts')" id="nav-debts" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 hover:text-white">
+                        <button onclick="window.switchTab('debts')" id="nav-debts" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 hover:text-white">
                             <i class="fas fa-receipt w-5 text-center text-rose-500"></i>
                             <span class="nav-text">Công nợ & Sổ thu chi</span>
                         </button>
@@ -111,7 +108,6 @@
             </nav>
         </aside>
 
-        <!-- CONTENT AREA -->
         <main class="flex-1 flex flex-col min-w-0 bg-gray-50">
             <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm">
                 <h1 id="page-title" class="text-xl font-bold text-gray-800">Quản Lý Khách Hàng & Dịch Vụ</h1>
@@ -288,17 +284,17 @@
                     <input type="url" id="service-url" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
                 </div>
 
-                <!-- Dành cho hình thức normal / google -->
+                <!-- Dành cho hình thức normal / google / token -->
                 <div id="single-login-fields" class="space-y-3">
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1">Tài Khoản / Email</label>
-                            <input type="text" id="service-account" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Tài Khoản / Email / User</label>
+                            <input type="text" id="service-account" placeholder="user@gmail.com" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-emerald-500">
                         </div>
                         <div id="field-password-container">
-                            <label class="block text-xs font-semibold text-gray-600 mb-1">Mật Khẩu</label>
+                            <label id="label-password-title" class="block text-xs font-semibold text-gray-600 mb-1">Mật khẩu / Token</label>
                             <div class="relative">
-                                <input type="password" id="service-password" placeholder="••••••••" class="w-full px-3 py-2 border rounded-lg text-sm pr-9 focus:ring-emerald-500">
+                                <input type="text" id="service-password" placeholder="Mật khẩu hoặc Token (API Key...)" class="w-full px-3 py-2 border rounded-lg text-sm pr-9 focus:ring-emerald-500">
                                 <button type="button" onclick="window.toggleInputPasswordVisibility('service-password', this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 p-1">
                                     <i class="fas fa-eye text-xs"></i>
                                 </button>
@@ -307,17 +303,21 @@
                     </div>
                 </div>
 
-                <!-- Dành cho hình thức "multiple" (Nhiều hình thức đăng nhập) -->
+                <!-- Thông báo riêng cho Google Login -->
+                <div id="google-login-notice" class="hidden bg-blue-50 border border-blue-200 text-blue-700 px-3 py-2 rounded-lg text-xs flex items-center space-x-2">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Đăng nhập bằng Google không cần mật khẩu hệ thống. Khách hàng sẽ đăng nhập trực tiếp qua tài khoản Google của họ.</span>
+                </div>
+
+                <!-- Dành cho hình thức "multiple" -->
                 <div id="multiple-login-fields" class="space-y-3 hidden bg-gray-50 p-3 rounded-lg border border-gray-200">
                     <div class="flex justify-between items-center">
-                        <label class="block text-xs font-semibold text-gray-700">Danh sách các tài khoản / cách đăng nhập</label>
+                        <label class="block text-xs font-semibold text-gray-700">Danh sách nhiều cách đăng nhập</label>
                         <button type="button" onclick="window.addCredentialRow()" class="text-xs bg-emerald-600 text-white px-2.5 py-1 rounded hover:bg-emerald-700">
                             <i class="fas fa-plus mr-1"></i>Thêm cách đăng nhập
                         </button>
                     </div>
-                    <div id="credentials-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                        <!-- Dynamic credential rows will be injected here -->
-                    </div>
+                    <div id="credentials-container" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
@@ -367,16 +367,12 @@
         let customers = [];
         let visiblePasswords = {}; 
         let isSaving = false;
-
-        // IndexedDB Helper for bulletproof offline storage
         let db = null;
+
         function initIndexedDB() {
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 const request = indexedDB.open("CRM_Pro_DB", 1);
-                request.onerror = (e) => {
-                    console.warn("IndexedDB error:", e);
-                    resolve(null);
-                };
+                request.onerror = () => resolve(null);
                 request.onsuccess = (e) => {
                     db = e.target.result;
                     resolve(db);
@@ -392,33 +388,26 @@
 
         async function saveToDB(data) {
             try {
-                // Always save to localStorage first as immediate cache
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-                
-                // Also save to IndexedDB if available
                 if (db) {
                     const tx = db.transaction("store", "readwrite");
-                    const store = tx.objectStore("store");
-                    store.put({ key: "customers", value: data });
+                    tx.objectStore("store").put({ key: "customers", value: data });
                 }
             } catch (e) {
-                console.error("Save storage error:", e);
+                console.error("Save error:", e);
             }
         }
 
         async function loadFromDB() {
             try {
-                // Try IndexedDB first
                 if (db) {
                     return new Promise((resolve) => {
                         const tx = db.transaction("store", "readonly");
-                        const store = tx.objectStore("store");
-                        const req = store.get("customers");
+                        const req = tx.objectStore("store").get("customers");
                         req.onsuccess = () => {
                             if (req.result && Array.isArray(req.result.value)) {
                                 resolve(req.result.value);
                             } else {
-                                // Fallback to localStorage
                                 resolve(loadFromLocalStorage());
                             }
                         };
@@ -439,9 +428,7 @@
                     const parsed = JSON.parse(dataStr);
                     if (Array.isArray(parsed)) return parsed;
                 }
-            } catch (e) {
-                console.error("LocalStorage read error", e);
-            }
+            } catch (e) {}
             return [];
         }
 
@@ -504,37 +491,6 @@
             if (tabId === 'debts') window.renderDebtsTab();
         };
 
-        window.copyZaloFormat = function(custId) {
-            const c = customers.find(x => x.id === custId);
-            if (!c) return;
-
-            let msg = `📌 THÔNG TIN DỊCH VỤ - ${c.name.toUpperCase()}\n📞 SĐT: ${c.phone}\n-------------------\n`;
-            if (!c.services || c.services.length === 0) {
-                msg += `(Chưa có dịch vụ nào)`;
-            } else {
-                c.services.forEach(s => {
-                    const urlPart = s.url ? ` (${s.url})` : '';
-                    msg += `└ 🔑 ${s.name}${urlPart}\n - TK: ${s.account || 'Chưa cập nhật'}\n`;
-                    msg += (s.loginType === 'google') ? ` - Đăng nhập: Google Login\n` : ` - MK/Xác thực: ${s.password || 'Chưa có'}\n`;
-                });
-            }
-
-            const textArea = document.createElement("textarea");
-            textArea.value = msg;
-            textArea.style.position = "fixed"; 
-            textArea.style.left = "-9999px";
-            document.body.appendChild(textArea);
-            textArea.select();
-            
-            try {
-                document.execCommand('copy');
-                window.showToast("Đã copy mẫu Zalo thành công!");
-            } catch (err) {
-                window.showToast("Trình duyệt không hỗ trợ copy tự động!", false);
-            }
-            document.body.removeChild(textArea);
-        };
-
         window.exportDataJSON = function() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(customers, null, 2));
             const dl = document.createElement('a');
@@ -554,13 +510,64 @@
                 try {
                     const imported = JSON.parse(e.target.result);
                     if (Array.isArray(imported)) {
-                        customers = imported;
+                        let hasDuplicates = false;
+                        imported.forEach(impCust => {
+                            const exists = customers.some(c => c.id === impCust.id || c.phone === impCust.phone);
+                            if (exists) hasDuplicates = true;
+                        });
+
+                        let action = true; // Mặc định là gộp/thêm mới nếu không trùng
+                        if (hasDuplicates) {
+                            action = confirm("Phát hiện có KHÁCH HÀNG BỊ TRÙNG (trùng SĐT hoặc ID) trong file import.\n\nBấm 'OK' để GỘP dịch vụ cho khách trùng.\nBấm 'Cancel' nếu muốn GHI ĐÈ dữ liệu khách cũ thành khách mới.");
+                        }
+
+                        let addedCount = 0;
+                        let updatedCount = 0;
+
+                        if (hasDuplicates && !action) {
+                            // Trường hợp người dùng chọn GHI ĐÈ hoàn toàn (Cancel) cho các mục trùng
+                            imported.forEach(impCust => {
+                                const existingIndex = customers.findIndex(c => c.id === impCust.id || c.phone === impCust.phone);
+                                if (existingIndex !== -1) {
+                                    customers[existingIndex] = impCust; // Ghi đè hoàn toàn
+                                    updatedCount++;
+                                } else {
+                                    customers.push(impCust);
+                                    addedCount++;
+                                }
+                            });
+                            window.showToast(`Đã ghi đè ${updatedCount} và thêm mới ${addedCount} khách hàng!`);
+                        } else {
+                            // Trường hợp GỘP (mặc định hoặc user bấm OK khi có trùng)
+                            imported.forEach(impCust => {
+                                const existingIndex = customers.findIndex(c => c.id === impCust.id || c.phone === impCust.phone);
+                                if (existingIndex !== -1) {
+                                    // Gộp services nếu đã tồn tại khách hàng
+                                    if (!customers[existingIndex].services) customers[existingIndex].services = [];
+                                    if (impCust.services && Array.isArray(impCust.services)) {
+                                        impCust.services.forEach(impServ => {
+                                            if (!customers[existingIndex].services.some(s => s.id === impServ.id)) {
+                                                customers[existingIndex].services.push(impServ);
+                                                updatedCount++;
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    customers.push(impCust);
+                                    addedCount++;
+                                }
+                            });
+                            window.showToast(`Nhập dữ liệu thành công! Thêm mới: ${addedCount}, Cập nhật thêm: ${updatedCount} dịch vụ.`);
+                        }
+
                         await window.saveDataToStorage();
                         window.renderCustomers();
-                        window.showToast("Đã khôi phục dữ liệu thành công!");
+                        window.updateDashboardStats();
+                    } else {
+                        alert("File JSON không đúng định dạng danh sách khách hàng.");
                     }
                 } catch (err) {
-                    alert("Lỗi file JSON: " + err.message);
+                    alert("Lỗi đọc file JSON: " + err.message);
                 }
             };
             reader.readAsText(file);
@@ -579,7 +586,7 @@
         window.showPersistentStorageInfo = function() {
             const totalClients = customers.length;
             const totalServices = customers.reduce((acc, c) => acc + (c.services ? c.services.length : 0), 0);
-            alert(`Trạng thái Lưu trữ Ngoại tuyến:\n\n- Số lượng Khách hàng: ${totalClients}\n- Tổng Dịch vụ: ${totalServices}\n- Công nghệ lưu: IndexedDB + LocalStorage (Hoạt động offline vĩnh viễn trên trình duyệt này).\n\n💡 Mẹo: Bạn nên dùng nút "Sao lưu (Export JSON" định kỳ để lưu file dự phòng về máy tính tránh trường hợp trình duyệt bị xóa dữ liệu cache.`);
+            alert(`Trạng thái Lưu trữ Ngoại tuyến:\n\n- Số lượng Khách hàng: ${totalClients}\n- Tổng Dịch vụ: ${totalServices}\n- Công nghệ lưu: IndexedDB + LocalStorage (Hoạt động offline vĩnh viễn trên trình duyệt này).`);
         };
 
         window.showToast = function(msg, isSuccess = true) {
@@ -643,19 +650,9 @@
                 return; 
             }
 
-            const dupEmail = customers.find(c => c.email.toLowerCase() === email.toLowerCase() && c.id !== id);
-            if (dupEmail) { 
-                errEl.innerText = `Email đã tồn tại ở khách "${dupEmail.name}"`; 
-                errEl.classList.remove('hidden'); 
-                isSaving = false;
-                return; 
-            }
-
             if (id) {
                 const idx = customers.findIndex(c => c.id === id);
-                if (idx !== -1) {
-                    customers[idx] = { ...customers[idx], name, phone, email, note };
-                }
+                if (idx !== -1) customers[idx] = { ...customers[idx], name, phone, email, note };
             } else {
                 customers.unshift({ id: 'C_' + Date.now(), name, phone, email, note, services: [] });
             }
@@ -686,38 +683,49 @@
             const isGoogle = loginType === 'google';
             const isMultiple = loginType === 'multiple';
 
-            document.getElementById('field-password-container').classList.toggle('hidden', isGoogle);
+            const passContainer = document.getElementById('field-password-container');
+            const googleNotice = document.getElementById('google-login-notice');
+
+            passContainer.classList.remove('hidden');
+            googleNotice.classList.add('hidden');
+
+            if (isGoogle) {
+                passContainer.classList.add('hidden');
+                googleNotice.classList.remove('hidden');
+            }
+
             document.getElementById('single-login-fields').classList.toggle('hidden', isMultiple);
             document.getElementById('multiple-login-fields').classList.toggle('hidden', !isMultiple);
 
             if (isMultiple) {
-                // If container is empty, add at least one row by default
                 const container = document.getElementById('credentials-container');
                 if (container && container.children.length === 0) {
-                    window.addCredentialRow();
+                    window.addCredentialRow('Mật khẩu', '', '');
                 }
             }
         };
 
-        window.addCredentialRow = function(type = 'Mật khẩu', account = '', password = '', note = '') {
+        window.addCredentialRow = function(type = 'Mật khẩu', account = '', password = '') {
             const container = document.getElementById('credentials-container');
-            const rowId = 'cred_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
             const div = document.createElement('div');
             div.className = 'grid grid-cols-12 gap-2 items-center bg-white p-2 rounded border border-gray-200 shadow-sm credential-row';
             div.innerHTML = `
                 <div class="col-span-3">
-                    <input type="text" placeholder="Loại (VD: Google, Email)" value="${type}" class="cred-type w-full px-2 py-1 text-xs border rounded">
+                    <select class="cred-type w-full px-2 py-1 text-xs border rounded bg-white">
+                        <option value="Mật khẩu" ${type==='Mật khẩu'?'selected':''}>Mật khẩu</option>
+                        <option value="Token" ${type==='Token'?'selected':''}>Token</option>
+                        <option value="Google" ${type==='Google'?'selected':''}>Google Login</option>
+                        <option value="Cookie" ${type==='Cookie'?'selected':''}>Cookie</option>
+                    </select>
                 </div>
                 <div class="col-span-4">
-                    <input type="text" placeholder="Tài khoản / SĐT" value="${account}" class="cred-account w-full px-2 py-1 text-xs border rounded">
+                    <input type="text" placeholder="Tài khoản" value="${account}" class="cred-account w-full px-2 py-1 text-xs border rounded">
                 </div>
                 <div class="col-span-4">
-                    <input type="text" placeholder="Mật khẩu / Ghi chú" value="${password}" class="cred-password w-full px-2 py-1 text-xs border rounded">
+                    <input type="text" placeholder="Mật khẩu/Token" value="${password}" class="cred-password w-full px-2 py-1 text-xs border rounded">
                 </div>
                 <div class="col-span-1 text-center">
-                    <button type="button" onclick="this.closest('.credential-row').remove()" class="text-rose-500 hover:text-rose-700 text-xs p-1">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                    <button type="button" onclick="this.closest('.credential-row').remove()" class="text-rose-500 text-xs p-1"><i class="fas fa-trash"></i></button>
                 </div>
             `;
             container.appendChild(div);
@@ -743,7 +751,6 @@
                     document.getElementById('service-price').value = s.price || 0;
                     document.getElementById('service-is-paid').value = s.isPaid ? "true" : "false";
 
-                    // If multiple credentials exist
                     if (s.loginType === 'multiple' && Array.isArray(s.credentials)) {
                         s.credentials.forEach(cr => {
                             window.addCredentialRow(cr.type, cr.account, cr.password);
@@ -753,7 +760,7 @@
             } else {
                 document.getElementById('modal-service-title').innerText = "Thêm Dịch Vụ";
                 document.getElementById('form-service').reset();
-                window.addCredentialRow('Chính', '', '');
+                window.addCredentialRow('Mật khẩu', '', '');
             }
             window.toggleExpiryField(); 
             window.toggleLoginTypeFields();
@@ -772,12 +779,11 @@
             const loginType = document.getElementById('service-login-type').value;
             const type = document.getElementById('service-type').value;
 
-            // Collect credentials if multiple
             let credentials = [];
             if (loginType === 'multiple') {
                 document.querySelectorAll('.credential-row').forEach(row => {
                     credentials.push({
-                        type: row.querySelector('.cred-type').value.trim() || 'Tài khoản',
+                        type: row.querySelector('.cred-type').value.trim(),
                         account: row.querySelector('.cred-account').value.trim(),
                         password: row.querySelector('.cred-password').value.trim()
                     });
@@ -828,6 +834,20 @@
             }
         };
 
+        window.markServiceAsPaid = async function(cId, sId) {
+            const c = customers.find(x => x.id === cId);
+            if (c && c.services) {
+                const s = c.services.find(x => x.id === sId);
+                if (s) {
+                    s.isPaid = true;
+                    await window.saveDataToStorage();
+                    window.renderCustomers();
+                    window.renderDebtsTab();
+                    window.showToast("Đã xác nhận thanh toán công nợ!");
+                }
+            }
+        };
+
         window.copyZaloFormat = function(custId) {
             const c = customers.find(x => x.id === custId);
             if (!c) return;
@@ -844,7 +864,7 @@
                             msg += `   ▪ [${cr.type}] TK: ${cr.account || '---'} | MK: ${cr.password || '---'}\n`;
                         });
                     } else if (s.loginType === 'google') {
-                        msg += `   - Đăng nhập: Google Login\n`;
+                        msg += `   - Đăng nhập: Google Login (${s.account || 'Chưa cập nhật'})\n`;
                     } else {
                         msg += `   - TK: ${s.account || 'Chưa cập nhật'}\n`;
                         msg += `   - MK: ${s.password || 'Chưa có'}\n`;
@@ -858,7 +878,6 @@
             textArea.style.left = "-9999px";
             document.body.appendChild(textArea);
             textArea.select();
-            
             try {
                 document.execCommand('copy');
                 window.showToast("Đã copy mẫu Zalo thành công!");
@@ -912,18 +931,18 @@
                                             loginDisplay = s.credentials.map(cr => `<div class="mb-0.5"><span class="font-semibold text-gray-600">[${cr.type}]:</span> ${cr.account || ''}</div>`).join('');
                                             passDisplay = s.credentials.map(cr => `<div class="mb-0.5"><span class="font-semibold text-gray-600">[${cr.type}]:</span> ${visiblePasswords[s.id] ? (cr.password || '---') : '••••••••'}</div>`).join('');
                                         } else if (s.loginType === 'google') {
-                                            loginDisplay = 'Google Login';
-                                            passDisplay = 'Google Login';
+                                            loginDisplay = `<span>${s.account || '-'}</span>`;
+                                            passDisplay = '<span class="text-blue-600 italic font-medium">Google Login</span>';
                                         } else {
                                             loginDisplay = `<span>${s.account || '-'}</span>`;
-                                            passDisplay = `<span>${s.password ? (visiblePasswords[s.id] ? s.password : '••••••••') : '-'}</span> <button onclick="window.togglePasswordDisplay('${s.id}')" class="ml-1 text-gray-400"><i class="fas ${visiblePasswords[s.id] ? 'fa-eye-slash' : 'fa-eye'}"></i></button>`;
+                                            passDisplay = `<span>${s.password ? (visiblePasswords[s.id] ? s.password : '••••••••') : '-'}</span>`;
                                         }
                                         return `
                                         <tr class="border-b border-gray-100/50">
                                             <td class="py-2.5 font-bold">${s.name}</td>
                                             <td class="py-2.5 text-blue-600">${s.url || '-'}</td>
                                             <td class="py-2.5">${loginDisplay}</td>
-                                            <td class="py-2.5">${passDisplay} ${s.loginType === 'multiple' && s.credentials && s.credentials.length > 0 ? `<button onclick="window.togglePasswordDisplay('${s.id}')" class="ml-1 text-gray-400"><i class="fas ${visiblePasswords[s.id] ? 'fa-eye-slash' : 'fa-eye'}"></i></button>` : ''}</td>
+                                            <td class="py-2.5">${passDisplay} ${s.loginType !== 'google' ? `<button onclick="window.togglePasswordDisplay('${s.id}')" class="ml-1 text-gray-400"><i class="fas ${visiblePasswords[s.id] ? 'fa-eye-slash' : 'fa-eye'}"></i></button>` : ''}</td>
                                             <td class="py-2.5">${s.isPaid ? '<span class="text-emerald-600 font-bold">[Đã TT]</span>' : '<span class="text-rose-600 font-bold">Còn Nợ</span>'}</td>
                                             <td class="py-2.5 text-right space-x-2">
                                                 <button onclick="window.openServiceModal('${c.id}','${s.id}')" class="text-gray-400 hover:text-blue-600"><i class="fas fa-pen"></i></button>
@@ -951,7 +970,7 @@
                     c.services.forEach(s => {
                         if (s.name.toLowerCase().includes(search) || (s.account||'').toLowerCase().includes(search) || c.name.toLowerCase().includes(search)) {
                             let accText = s.account || '-';
-                            let passText = s.loginType === 'google' ? 'Google Login' : (s.password ? (visiblePasswords[s.id] ? s.password : '••••••••') : '-');
+                            let passText = s.loginType === 'google' ? '<span class="text-blue-600 italic">Google Login</span>' : (s.password ? (visiblePasswords[s.id] ? s.password : '••••••••') : '-');
                             
                             if (s.loginType === 'multiple' && s.credentials) {
                                 accText = s.credentials.map(cr => `[${cr.type}]: ${cr.account}`).join('<br>');
@@ -964,7 +983,7 @@
                                     <td class="p-3 font-bold">${s.name}</td>
                                     <td class="p-3">${s.loginType === 'multiple' ? 'Nhiều cách' : (s.loginType === 'google' ? 'Google' : 'Mật khẩu')}</td>
                                     <td class="p-3">${accText}</td>
-                                    <td class="p-3">${passText} <button onclick="window.togglePasswordDisplay('${s.id}')" class="ml-1 text-gray-400"><i class="fas ${visiblePasswords[s.id] ? 'fa-eye-slash' : 'fa-eye'}"></i></button></td>
+                                    <td class="p-3">${passText} ${s.loginType !== 'google' ? `<button onclick="window.togglePasswordDisplay('${s.id}')" class="ml-1 text-gray-400"><i class="fas ${visiblePasswords[s.id] ? 'fa-eye-slash' : 'fa-eye'}"></i></button>` : ''}</td>
                                     <td class="p-3">${s.serviceType === 'lifetime' ? 'Vĩnh viễn' : (s.expiryDate||'-')}</td>
                                     <td class="p-3">${s.isPaid ? '<span class="text-emerald-600">[Đã TT]</span>' : '<span class="text-rose-600">Còn Nợ</span>'}</td>
                                 </tr>`;
@@ -979,48 +998,38 @@
             if (!tbody) return;
             tbody.innerHTML = '';
             
+            let count = 0;
             customers.forEach(c => {
                 if (c.services) {
-                    c.services.filter(s => !s.isPaid).forEach(s => {
-                        tbody.innerHTML += `
-                            <tr class="hover:bg-rose-50 border-b">
-                                <td class="p-3 font-bold">${c.name}</td>
-                                <td class="p-3">${c.phone}</td>
-                                <td class="p-3">${s.name}</td>
-                                <td class="p-3 text-rose-600 font-bold">${(Number(s.price)||0).toLocaleString()} đ</td>
-                                <td class="p-3">${s.serviceType === 'lifetime' ? 'Vĩnh viễn' : s.expiryDate}</td>
-                                <td class="p-3"><button onclick="window.markAsPaid('${c.id}', '${s.id}')" class="bg-emerald-600 text-white text-xs px-2 py-1 rounded">Thanh Toán</button></td>
-                            </tr>`;
+                    c.services.forEach(s => {
+                        if (!s.isPaid) {
+                            count++;
+                            tbody.innerHTML += `
+                                <tr class="hover:bg-rose-50/50 border-b">
+                                    <td class="p-3 font-medium">${c.name}</td>
+                                    <td class="p-3 text-gray-600">${c.phone}</td>
+                                    <td class="p-3 font-bold">${s.name}</td>
+                                    <td class="p-3 font-bold text-rose-600">${(Number(s.price)||0).toLocaleString()} đ</td>
+                                    <td class="p-3">${s.serviceType === 'lifetime' ? 'Vĩnh viễn' : (s.expiryDate||'-')}</td>
+                                    <td class="p-3">
+                                        <button onclick="window.markServiceAsPaid('${c.id}','${s.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg">
+                                            <i class="fas fa-check mr-1"></i>Đã Thu Tiền
+                                        </button>
+                                    </td>
+                                </tr>`;
+                        }
                     });
                 }
             });
-        };
 
-        window.markAsPaid = async function(cId, sId) {
-            const c = customers.find(x => x.id === cId);
-            const s = c && c.services ? c.services.find(x => x.id === sId) : null;
-            if (s) { 
-                s.isPaid = true; 
-                await window.saveDataToStorage(); 
-                window.renderDebtsTab(); 
-                window.renderCustomers(); 
-                window.showToast("Đã thanh toán nợ!"); 
+            if (count === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-400 italic">Tuyệt vời! Không có khoản công nợ nào chưa thanh toán.</td></tr>`;
             }
         };
 
-        // Khởi chạy khi DOM load xong
-        document.addEventListener('DOMContentLoaded', () => {
+        // Start App
+        window.addEventListener('DOMContentLoaded', () => {
             window.loadDataFromStorage();
-            
-            const sidebarBtn = document.getElementById('toggle-sidebar-btn');
-            if (sidebarBtn) {
-                sidebarBtn.addEventListener('click', () => {
-                    const sb = document.getElementById('sidebar');
-                    if (sb) sb.classList.toggle('w-64');
-                    if (sb) sb.classList.toggle('w-20');
-                    document.querySelectorAll('.nav-text, .sidebar-label, .logo-text').forEach(el => el.classList.toggle('hidden'));
-                });
-            }
         });
     </script>
 </body>
