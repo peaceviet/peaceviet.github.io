@@ -529,4 +529,602 @@
             alert("Thông tin lưu trữ:\n\nDữ liệu ứng dụng hiện tại đang được tự động lưu VĨNH VIỄN trong bộ nhớ máy tính/trình duyệt của bạn (Local Storage).\n\nĐể đảm bảo an toàn tối đa, bạn nên định kỳ bấm nút 'Sao lưu (Export JSON)' để tải bản lưu trữ về máy tính.");
         }
 
-        // --- NAVIGATION & T
+        // --- NAVIGATION & TABS ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-emerald-600', 'text-white', 'shadow-md');
+                el.classList.add('hover:bg-gray-800', 'text-gray-300');
+            });
+
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                activeNav.classList.remove('hover:bg-gray-800', 'text-gray-300');
+                activeNav.classList.add('bg-emerald-600', 'text-white', 'shadow-md');
+            }
+
+            const titles = {
+                'dashboard': 'Tổng Quan Hệ Thống',
+                'customers': 'Quản Lý Khách Hàng & Dịch Vụ',
+                'accounts': 'Tất Cả Tài Khoản Dịch Vụ',
+                'debts': 'Quản Lý Công Nợ & Sổ Thu Chi'
+            };
+            document.getElementById('page-title').innerText = titles[tabId] || 'CRM Manager';
+
+            if (tabId === 'accounts') renderAccountsTab();
+            if (tabId === 'debts') renderDebtsTab();
+        }
+
+        function setupSidebarToggle() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('toggle-sidebar-btn');
+            
+            toggleBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('w-64');
+                sidebar.classList.toggle('w-20');
+                document.querySelectorAll('.nav-text, .sidebar-label, .logo-text').forEach(el => {
+                    el.classList.toggle('hidden');
+                });
+            });
+        }
+
+        // --- TOAST UTILITY ---
+        function showToast(msg, isSuccess = true) {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const msgEl = document.getElementById('toast-msg');
+
+            msgEl.innerText = msg;
+            if (isSuccess) {
+                icon.className = "fas fa-check-circle text-emerald-400";
+            } else {
+                icon.className = "fas fa-exclamation-circle text-rose-400";
+            }
+
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // --- UI PASSWORD VISIBILITY TOGGLE ---
+        function toggleInputPasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash text-xs';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye text-xs';
+            }
+        }
+
+        function togglePasswordDisplay(serviceId) {
+            visiblePasswords[serviceId] = !visiblePasswords[serviceId];
+            renderCustomers();
+            if (!document.getElementById('tab-accounts').classList.contains('hidden')) {
+                renderAccountsTab();
+            }
+        }
+
+        // --- CUSTOMER MANAGEMENT ---
+        function renderCustomers() {
+            const search = document.getElementById('search-customer').value.toLowerCase().trim();
+            const container = document.getElementById('customer-list');
+            container.innerHTML = '';
+
+            const filtered = customers.filter(c => 
+                c.name.toLowerCase().includes(search) || 
+                c.phone.includes(search) || 
+                c.email.toLowerCase().includes(search)
+            );
+
+            document.getElementById('customer-count').innerText = filtered.length;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white rounded-xl p-8 text-center border border-gray-200">
+                        <i class="fas fa-user-slash text-4xl text-gray-300 mb-2"></i>
+                        <p class="text-gray-500 font-medium">Không tìm thấy khách hàng nào phù hợp.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(c => {
+                const totalDebt = c.services
+                    .filter(s => !s.isPaid)
+                    .reduce((sum, s) => sum + (Number(s.price) || 0), 0);
+
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden transition hover:shadow-md";
+                
+                card.innerHTML = `
+                    <!-- Customer Header Bar -->
+                    <div class="p-4 bg-white border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-base shrink-0">
+                                ${c.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h2 class="font-bold text-gray-800 text-base">${c.name}</h2>
+                                    ${totalDebt > 0 ? `<span class="bg-rose-100 text-rose-700 text-xs px-2 py-0.5 rounded-full font-semibold">Nợ: ${totalDebt.toLocaleString()} đ</span>` : ''}
+                                </div>
+                                <div class="flex flex-wrap items-center gap-x-4 text-xs text-gray-500 mt-0.5">
+                                    <span><i class="fas fa-phone mr-1 text-emerald-600"></i>${c.phone}</span>
+                                    <span><i class="fas fa-envelope mr-1 text-blue-600"></i>${c.email}</span>
+                                    ${c.note ? `<span class="text-gray-400 italic"><i class="fas fa-sticky-note mr-1"></i>${c.note}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex items-center space-x-2">
+                            <button onclick="copyZaloFormat('${c.id}')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded-lg font-medium flex items-center space-x-1 transition shadow-sm" title="Copy gửi Zalo">
+                                <i class="fas fa-copy"></i>
+                                <span>Copy Zalo</span>
+                            </button>
+                            <button onclick="openServiceModal('${c.id}')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 text-xs px-3 py-1.5 rounded-lg font-medium flex items-center space-x-1 transition">
+                                <i class="fas fa-plus"></i>
+                                <span>Thêm DV</span>
+                            </button>
+                            <button onclick="openCustomerModal('${c.id}')" class="text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-gray-100 transition" title="Sửa thông tin khách">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteCustomer('${c.id}')" class="text-rose-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition" title="Xóa khách hàng">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Services Sub-Table -->
+                    <div class="p-4 bg-gray-50/50">
+                        ${c.services.length === 0 ? `
+                            <p class="text-xs text-gray-400 italic text-center py-2">Chưa có dịch vụ nào. Bấm "Thêm DV" để đăng ký.</p>
+                        ` : `
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-xs">
+                                    <thead>
+                                        <tr class="text-gray-400 font-semibold border-b border-gray-200">
+                                            <th class="pb-2">Tên Dịch Vụ</th>
+                                            <th class="pb-2">Đường Dẫn (URL)</th>
+                                            <th class="pb-2">Tài Khoản Login</th>
+                                            <th class="pb-2">Mật Khẩu / Xác Thực</th>
+                                            <th class="pb-2">Thời Hạn</th>
+                                            <th class="pb-2">Giá Tiền</th>
+                                            <th class="pb-2">Trạng Thái</th>
+                                            <th class="pb-2 text-right">Thao Tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200/60">
+                                        ${c.services.map(s => {
+                                            const isPassShown = visiblePasswords[s.id];
+                                            const displayPassword = s.loginType === 'google' 
+                                                ? 'Google Login' 
+                                                : (s.password ? (isPassShown ? s.password : '••••••••') : 'N/A');
+
+                                            return `
+                                            <tr class="hover:bg-white transition">
+                                                <td class="py-2.5 font-bold text-gray-800">${s.name}</td>
+                                                <td class="py-2.5">
+                                                    ${s.url ? `<a href="${s.url}" target="_blank" class="text-blue-600 hover:underline flex items-center space-x-1 max-w-[150px] truncate"><span>${s.url}</span> <i class="fas fa-external-link-alt text-[10px]"></i></a>` : '<span class="text-gray-400">Không có</span>'}
+                                                </td>
+                                                <td class="py-2.5 font-mono text-gray-700">${s.account || 'N/A'}</td>
+                                                <td class="py-2.5 font-mono text-gray-700">
+                                                    <div class="flex items-center space-x-1.5">
+                                                        <span>${displayPassword}</span>
+                                                        ${s.loginType !== 'google' && s.password ? `
+                                                            <button onclick="togglePasswordDisplay('${s.id}')" class="text-gray-400 hover:text-gray-600 focus:outline-none px-1">
+                                                                <i class="fas ${isPassShown ? 'fa-eye-slash' : 'fa-eye'} text-[11px]"></i>
+                                                            </button>
+                                                        ` : ''}
+                                                    </div>
+                                                </td>
+                                                <td class="py-2.5">
+                                                    ${s.serviceType === 'lifetime' ? '<span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded-full">Vĩnh Viễn</span>' : (s.expiryDate || 'N/A')}
+                                                </td>
+                                                <td class="py-2.5 font-medium">${(Number(s.price)||0).toLocaleString()} đ</td>
+                                                <td class="py-2.5">
+                                                    ${s.isPaid ? '<span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">[Đã TT]</span>' : '<span class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">Còn Nợ</span>'}
+                                                </td>
+                                                <td class="py-2.5 text-right space-x-1">
+                                                    <button onclick="openServiceModal('${c.id}', '${s.id}')" class="text-gray-400 hover:text-blue-600 p-1"><i class="fas fa-pen"></i></button>
+                                                    <button onclick="deleteService('${c.id}', '${s.id}')" class="text-gray-400 hover:text-rose-600 p-1"><i class="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                        `}).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // --- COPY ZALO FORMAT ---
+        function copyZaloFormat(custId) {
+            const c = customers.find(x => x.id === custId);
+            if (!c) return;
+
+            let msg = `📌 THÔNG TIN DỊCH VỤ - ${c.name.toUpperCase()}\n`;
+            msg += `📞 SĐT: ${c.phone}\n`;
+            msg += `-------------------\n`;
+
+            if (c.services.length === 0) {
+                msg += `(Chưa có dịch vụ nào đăng ký)`;
+            } else {
+                c.services.forEach(s => {
+                    const statusTag = s.isPaid ? '[Đã TT]' : '[Chưa TT]';
+                    const urlPart = s.url ? ` (${s.url})` : '';
+                    msg += `└ 🔑 ${s.name} ${statusTag}${urlPart}\n`;
+                    msg += ` - TK: ${s.account || 'Chưa cập nhật'}\n`;
+
+                    if (s.loginType === 'google') {
+                        msg += ` - Đăng nhập: Google Login\n`;
+                    } else {
+                        msg += ` - MK/Xác thực: ${s.password || 'Chưa có'}\n`;
+                    }
+                });
+            }
+
+            navigator.clipboard.writeText(msg).then(() => {
+                showToast("Đã copy mẫu tin nhắn Zalo vào bộ nhớ tạm!");
+            }).catch(err => {
+                showToast("Không thể copy tự động, vui lòng thử lại!", false);
+            });
+        }
+
+        // --- CUSTOMER MODAL LOGIC ---
+        function openCustomerModal(custId = null) {
+            const modal = document.getElementById('modal-customer');
+            const title = document.getElementById('modal-customer-title');
+            const err = document.getElementById('cust-error');
+            err.classList.add('hidden');
+
+            if (custId) {
+                const c = customers.find(x => x.id === custId);
+                if (!c) return;
+                title.innerText = "Chỉnh Sửa Khách Hàng";
+                document.getElementById('cust-id').value = c.id;
+                document.getElementById('cust-name').value = c.name;
+                document.getElementById('cust-phone').value = c.phone;
+                document.getElementById('cust-email').value = c.email;
+                document.getElementById('cust-note').value = c.note || '';
+            } else {
+                title.innerText = "Thêm Khách Hàng Mới";
+                document.getElementById('form-customer').reset();
+                document.getElementById('cust-id').value = '';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeCustomerModal() {
+            document.getElementById('modal-customer').classList.add('hidden');
+        }
+
+        function saveCustomer(event) {
+            event.preventDefault();
+            if (isSavingCustomer) return;
+            isSavingCustomer = true;
+
+            const id = document.getElementById('cust-id').value;
+            const name = document.getElementById('cust-name').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const email = document.getElementById('cust-email').value.trim();
+            const note = document.getElementById('cust-note').value.trim();
+            const errEl = document.getElementById('cust-error');
+
+            // Check Duplicate Phone / Email
+            const duplicatePhone = customers.find(c => c.phone === phone && c.id !== id);
+            if (duplicatePhone) {
+                errEl.innerText = `Số điện thoại "${phone}" đã thuộc về khách hàng "${duplicatePhone.name}"!`;
+                errEl.classList.remove('hidden');
+                isSavingCustomer = false;
+                return;
+            }
+
+            const duplicateEmail = customers.find(c => c.email.toLowerCase() === email.toLowerCase() && c.id !== id);
+            if (duplicateEmail) {
+                errEl.innerText = `Email "${email}" đã thuộc về khách hàng "${duplicateEmail.name}"!`;
+                errEl.classList.remove('hidden');
+                isSavingCustomer = false;
+                return;
+            }
+
+            if (id) {
+                // Update
+                const idx = customers.findIndex(c => c.id === id);
+                if (idx !== -1) {
+                    customers[idx].name = name;
+                    customers[idx].phone = phone;
+                    customers[idx].email = email;
+                    customers[idx].note = note;
+                }
+            } else {
+                // Add
+                const newCustomer = {
+                    id: 'CUST_' + Date.now(),
+                    name,
+                    phone,
+                    email,
+                    note,
+                    services: []
+                };
+                customers.unshift(newCustomer);
+            }
+
+            saveDataToStorage();
+            renderCustomers();
+            closeCustomerModal();
+            showToast(id ? "Đã cập nhật khách hàng!" : "Đã thêm khách hàng mới!");
+            isSavingCustomer = false;
+        }
+
+        function deleteCustomer(custId) {
+            if (confirm("Bạn có chắc chắn muốn xóa khách hàng này cùng toàn bộ dịch vụ liên quan?")) {
+                customers = customers.filter(c => c.id !== custId);
+                saveDataToStorage();
+                renderCustomers();
+                showToast("Đã xóa khách hàng!");
+            }
+        }
+
+        // --- SERVICE MODAL LOGIC ---
+        function toggleExpiryField() {
+            const type = document.getElementById('service-type').value;
+            const expiryContainer = document.getElementById('field-expiry-container');
+            if (type === 'lifetime') {
+                expiryContainer.classList.add('hidden');
+                document.getElementById('service-expiry').value = '';
+            } else {
+                expiryContainer.classList.remove('hidden');
+            }
+        }
+
+        function toggleLoginTypeFields() {
+            const loginType = document.getElementById('service-login-type').value;
+            const passwordContainer = document.getElementById('field-password-container');
+            if (loginType === 'google') {
+                passwordContainer.classList.add('hidden');
+                document.getElementById('service-password').value = '';
+            } else {
+                passwordContainer.classList.remove('hidden');
+            }
+        }
+
+        function openServiceModal(custId, serviceId = null) {
+            const modal = document.getElementById('modal-service');
+            const title = document.getElementById('modal-service-title');
+            
+            document.getElementById('service-cust-id').value = custId;
+            document.getElementById('service-id').value = serviceId || '';
+
+            if (serviceId) {
+                const c = customers.find(x => x.id === custId);
+                const s = c ? c.services.find(s => s.id === serviceId) : null;
+                if (s) {
+                    title.innerText = "Chỉnh Sửa Dịch Vụ";
+                    document.getElementById('service-name').value = s.name;
+                    document.getElementById('service-url').value = s.url || '';
+                    document.getElementById('service-login-type').value = s.loginType || 'normal';
+                    document.getElementById('service-account').value = s.account || '';
+                    document.getElementById('service-password').value = s.password || '';
+                    document.getElementById('service-type').value = s.serviceType || 'fixed';
+                    document.getElementById('service-expiry').value = s.expiryDate || '';
+                    document.getElementById('service-price').value = s.price || 0;
+                    document.getElementById('service-is-paid').value = s.isPaid ? "true" : "false";
+                }
+            } else {
+                title.innerText = "Thêm Dịch Vụ Mới";
+                document.getElementById('form-service').reset();
+                document.getElementById('service-cust-id').value = custId;
+                document.getElementById('service-id').value = '';
+            }
+
+            toggleExpiryField();
+            toggleLoginTypeFields();
+            modal.classList.remove('hidden');
+        }
+
+        function closeServiceModal() {
+            document.getElementById('modal-service').classList.add('hidden');
+        }
+
+        function saveService(event) {
+            event.preventDefault();
+            if (isSavingService) return;
+            isSavingService = true;
+
+            const custId = document.getElementById('service-cust-id').value;
+            const serviceId = document.getElementById('service-id').value;
+
+            const name = document.getElementById('service-name').value.trim();
+            const url = document.getElementById('service-url').value.trim();
+            const loginType = document.getElementById('service-login-type').value;
+            const account = document.getElementById('service-account').value.trim();
+            const password = document.getElementById('service-password').value.trim();
+            const serviceType = document.getElementById('service-type').value;
+            const expiryDate = document.getElementById('service-expiry').value;
+            const price = Number(document.getElementById('service-price').value) || 0;
+            const isPaid = document.getElementById('service-is-paid').value === "true";
+
+            const c = customers.find(x => x.id === custId);
+            if (!c) {
+                isSavingService = false;
+                return;
+            }
+
+            const serviceData = {
+                id: serviceId || ('SERV_' + Date.now()),
+                name,
+                url,
+                loginType,
+                account,
+                password: loginType === 'google' ? '' : password,
+                serviceType,
+                expiryDate: serviceType === 'lifetime' ? '' : expiryDate,
+                price,
+                isPaid
+            };
+
+            if (serviceId) {
+                const sIdx = c.services.findIndex(s => s.id === serviceId);
+                if (sIdx !== -1) c.services[sIdx] = serviceData;
+            } else {
+                c.services.push(serviceData);
+            }
+
+            saveDataToStorage();
+            renderCustomers();
+            closeServiceModal();
+            showToast(serviceId ? "Đã cập nhật dịch vụ!" : "Đã thêm dịch vụ mới!");
+            isSavingService = false;
+        }
+
+        function deleteService(custId, serviceId) {
+            if (confirm("Bạn có chắc chắn muốn xóa dịch vụ này?")) {
+                const c = customers.find(x => x.id === custId);
+                if (c) {
+                    c.services = c.services.filter(s => s.id !== serviceId);
+                    saveDataToStorage();
+                    renderCustomers();
+                    showToast("Đã xóa dịch vụ!");
+                }
+            }
+        }
+
+        // --- DASHBOARD STATS ---
+        function updateDashboardStats() {
+            let totalServices = 0;
+            let totalRevenue = 0;
+            let totalDebt = 0;
+
+            customers.forEach(c => {
+                totalServices += c.services.length;
+                c.services.forEach(s => {
+                    const price = Number(s.price) || 0;
+                    if (s.isPaid) {
+                        totalRevenue += price;
+                    } else {
+                        totalDebt += price;
+                    }
+                });
+            });
+
+            document.getElementById('stat-total-customers').innerText = customers.length;
+            document.getElementById('stat-total-services').innerText = totalServices;
+            document.getElementById('stat-total-revenue').innerText = totalRevenue.toLocaleString() + ' đ';
+            document.getElementById('stat-total-debt').innerText = totalDebt.toLocaleString() + ' đ';
+        }
+
+        // --- RENDER ACCOUNTS TAB ---
+        function renderAccountsTab() {
+            const tbody = document.getElementById('accounts-table-body');
+            const search = (document.getElementById('search-account').value || '').toLowerCase();
+            tbody.innerHTML = '';
+
+            let rows = [];
+            customers.forEach(c => {
+                c.services.forEach(s => {
+                    if (s.name.toLowerCase().includes(search) || (s.account && s.account.toLowerCase().includes(search)) || c.name.toLowerCase().includes(search)) {
+                        rows.push({ custName: c.name, service: s });
+                    }
+                });
+            });
+
+            if (rows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-400">Không có dữ liệu tài khoản nào.</td></tr>`;
+                return;
+            }
+
+            rows.forEach(item => {
+                const s = item.service;
+                const isPassShown = visiblePasswords[s.id];
+                const displayPassword = s.loginType === 'google' 
+                    ? 'Google Login' 
+                    : (s.password ? (isPassShown ? s.password : '••••••••') : 'N/A');
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50";
+                tr.innerHTML = `
+                    <td class="p-3 font-medium text-gray-800">${item.custName}</td>
+                    <td class="p-3 font-bold">${s.name}</td>
+                    <td class="p-3">${s.loginType === 'google' ? '<span class="bg-red-50 text-red-600 px-2 py-0.5 rounded text-xs font-semibold">Google Login</span>' : '<span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs">Mật khẩu</span>'}</td>
+                    <td class="p-3 font-mono">${s.account || 'N/A'}</td>
+                    <td class="p-3 font-mono">
+                        <div class="flex items-center space-x-1.5">
+                            <span>${displayPassword}</span>
+                            ${s.loginType !== 'google' && s.password ? `
+                                <button onclick="togglePasswordDisplay('${s.id}')" class="text-gray-400 hover:text-gray-600 focus:outline-none px-1">
+                                    <i class="fas ${isPassShown ? 'fa-eye-slash' : 'fa-eye'} text-[11px]"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                    <td class="p-3">${s.serviceType === 'lifetime' ? '<span class="text-purple-600 font-bold">Vĩnh Viễn</span>' : (s.expiryDate || 'N/A')}</td>
+                    <td class="p-3">${s.isPaid ? '<span class="text-emerald-600 font-bold">[Đã TT]</span>' : '<span class="text-rose-600 font-bold">Còn Nợ</span>'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- RENDER DEBTS TAB ---
+        function renderDebtsTab() {
+            const tbody = document.getElementById('debts-table-body');
+            tbody.innerHTML = '';
+
+            let debtItems = [];
+            customers.forEach(c => {
+                c.services.filter(s => !s.isPaid).forEach(s => {
+                    debtItems.push({ cust: c, service: s });
+                });
+            });
+
+            if (debtItems.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-emerald-600 font-semibold">🎉 Tuyệt vời! Không có công nợ nào còn tồn đọng.</td></tr>`;
+                return;
+            }
+
+            debtItems.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-rose-50/30";
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-gray-800">${item.cust.name}</td>
+                    <td class="p-3">${item.cust.phone}</td>
+                    <td class="p-3 font-medium">${item.service.name}</td>
+                    <td class="p-3 font-bold text-rose-600">${(Number(item.service.price)||0).toLocaleString()} đ</td>
+                    <td class="p-3">${item.service.serviceType === 'lifetime' ? 'Vĩnh viễn' : (item.service.expiryDate || 'N/A')}</td>
+                    <td class="p-3">
+                        <button onclick="markAsPaid('${item.cust.id}', '${item.service.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded transition">
+                            Thanh Toán
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function markAsPaid(custId, serviceId) {
+            const c = customers.find(x => x.id === custId);
+            if (c) {
+                const s = c.services.find(s => s.id === serviceId);
+                if (s) {
+                    s.isPaid = true;
+                    saveDataToStorage();
+                    renderDebtsTab();
+                    renderCustomers();
+                    showToast("Đã xác nhận thanh toán công nợ!");
+                }
+            }
+        }
+    </script>
+</body>
+</html>
