@@ -99,8 +99,8 @@
                             <input type="file" id="import-json-file" accept=".json" class="hidden" onchange="window.importDataJSON(event)">
                         </label>
                         <button onclick="window.showPersistentStorageInfo()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 text-gray-300 hover:text-white">
-                            <i class="fas fa-question-circle w-5 text-center text-amber-400"></i>
-                            <span class="nav-text">Lưu dữ liệu vĩnh viễn</span>
+                            <i class="fas fa-database w-5 text-center text-amber-400"></i>
+                            <span class="nav-text">Trạng thái Lưu trữ</span>
                         </button>
                         <button onclick="window.resetToSampleData()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-gray-800 text-rose-400 hover:text-rose-300">
                             <i class="fas fa-undo w-5 text-center"></i>
@@ -351,7 +351,95 @@
         let visiblePasswords = {}; 
         let isSaving = false;
 
-        // Định nghĩa toàn bộ hàm trên window để đảm bảo global scope
+        // IndexedDB Helper for bulletproof offline storage
+        let db = null;
+        function initIndexedDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open("CRM_Pro_DB", 1);
+                request.onerror = (e) => {
+                    console.warn("IndexedDB error:", e);
+                    resolve(null);
+                };
+                request.onsuccess = (e) => {
+                    db = e.target.result;
+                    resolve(db);
+                };
+                request.onupgradeneeded = (e) => {
+                    const database = e.target.result;
+                    if (!database.objectStoreNames.contains("store")) {
+                        database.createObjectStore("store", { keyPath: "key" });
+                    }
+                };
+            });
+        }
+
+        async function saveToDB(data) {
+            try {
+                // Always save to localStorage first as immediate cache
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                
+                // Also save to IndexedDB if available
+                if (db) {
+                    const tx = db.transaction("store", "readwrite");
+                    const store = tx.objectStore("store");
+                    store.put({ key: "customers", value: data });
+                }
+            } catch (e) {
+                console.error("Save storage error:", e);
+            }
+        }
+
+        async function loadFromDB() {
+            try {
+                // Try IndexedDB first
+                if (db) {
+                    return new Promise((resolve) => {
+                        const tx = db.transaction("store", "readonly");
+                        const store = tx.objectStore("store");
+                        const req = store.get("customers");
+                        req.onsuccess = () => {
+                            if (req.result && Array.isArray(req.result.value)) {
+                                resolve(req.result.value);
+                            } else {
+                                // Fallback to localStorage
+                                resolve(loadFromLocalStorage());
+                            }
+                        };
+                        req.onerror = () => resolve(loadFromLocalStorage());
+                    });
+                } else {
+                    return loadFromLocalStorage();
+                }
+            } catch (e) {
+                return loadFromLocalStorage();
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const dataStr = localStorage.getItem(STORAGE_KEY);
+                if (dataStr) {
+                    const parsed = JSON.parse(dataStr);
+                    if (Array.isArray(parsed)) return parsed;
+                }
+            } catch (e) {
+                console.error("LocalStorage read error", e);
+            }
+            return [];
+        }
+
+        window.loadDataFromStorage = async function() {
+            await initIndexedDB();
+            customers = await loadFromDB();
+            window.renderCustomers();
+            window.updateDashboardStats();
+        };
+
+        window.saveDataToStorage = async function() {
+            await saveToDB(customers);
+            window.updateDashboardStats();
+        };
+
         window.switchTab = function(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             const targetTab = document.getElementById(`tab-${tabId}`);
@@ -366,24 +454,6 @@
             
             if (tabId === 'accounts') window.renderAccountsTab();
             if (tabId === 'debts') window.renderDebtsTab();
-        };
-
-        window.loadDataFromStorage = function() {
-            try {
-                const dataStr = localStorage.getItem(STORAGE_KEY);
-                if (dataStr) {
-                    customers = JSON.parse(dataStr);
-                    if (!Array.isArray(customers)) customers = [];
-                }
-            } catch (e) {
-                console.error("Lỗi đọc dữ liệu", e);
-                customers = [];
-            }
-        };
-
-        window.saveDataToStorage = function() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(customers));
-            window.updateDashboardStats();
         };
 
         window.copyZaloFormat = function(custId) {
@@ -425,21 +495,21 @@
             document.body.appendChild(dl);
             dl.click();
             dl.remove();
-            window.showToast("Đã xuất file JSON!");
+            window.showToast("Đã xuất file JSON sao lưu thành công!");
         };
 
         window.importDataJSON = function(event) {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 try {
                     const imported = JSON.parse(e.target.result);
                     if (Array.isArray(imported)) {
                         customers = imported;
-                        window.saveDataToStorage();
+                        await window.saveDataToStorage();
                         window.renderCustomers();
-                        window.showToast("Đã khôi phục dữ liệu!");
+                        window.showToast("Đã khôi phục dữ liệu thành công!");
                     }
                 } catch (err) {
                     alert("Lỗi file JSON: " + err.message);
@@ -449,17 +519,19 @@
             event.target.value = '';
         };
 
-        window.resetToSampleData = function() {
+        window.resetToSampleData = async function() {
             if (confirm("Đặt lại dữ liệu sẽ xóa toàn bộ danh sách hiện tại. Bạn chắc chắn?")) {
                 customers = [];
-                window.saveDataToStorage();
+                await window.saveDataToStorage();
                 window.renderCustomers();
                 window.showToast("Đã làm sạch dữ liệu!");
             }
         };
 
         window.showPersistentStorageInfo = function() {
-            alert("Dữ liệu được lưu vĩnh viễn trong Local Storage của trình duyệt offline.");
+            const totalClients = customers.length;
+            const totalServices = customers.reduce((acc, c) => acc + (c.services ? c.services.length : 0), 0);
+            alert(`Trạng thái Lưu trữ Ngoại tuyến:\n\n- Số lượng Khách hàng: ${totalClients}\n- Tổng Dịch vụ: ${totalServices}\n- Công nghệ lưu: IndexedDB + LocalStorage (Hoạt động offline vĩnh viễn trên trình duyệt này).\n\n💡 Mẹo: Bạn nên dùng nút "Sao lưu (Export JSON" định kỳ để lưu file dự phòng về máy tính tránh trường hợp trình duyệt bị xóa dữ liệu cache.`);
         };
 
         window.showToast = function(msg, isSuccess = true) {
@@ -503,7 +575,7 @@
 
         window.closeCustomerModal = function() { document.getElementById('modal-customer').classList.add('hidden'); };
 
-        window.saveCustomer = function(event) {
+        window.saveCustomer = async function(event) {
             event.preventDefault();
             if (isSaving) return;
             isSaving = true;
@@ -540,17 +612,17 @@
                 customers.unshift({ id: 'C_' + Date.now(), name, phone, email, note, services: [] });
             }
 
-            window.saveDataToStorage(); 
+            await window.saveDataToStorage(); 
             window.renderCustomers(); 
             window.closeCustomerModal();
             window.showToast(id ? "Đã sửa thành công!" : "Đã thêm khách hàng!");
             isSaving = false;
         };
 
-        window.deleteCustomer = function(id) {
+        window.deleteCustomer = async function(id) {
             if (confirm("Xóa khách hàng và toàn bộ dịch vụ của họ?")) {
                 customers = customers.filter(c => c.id !== id);
-                window.saveDataToStorage(); 
+                await window.saveDataToStorage(); 
                 window.renderCustomers(); 
                 window.showToast("Đã xóa!");
             }
@@ -595,7 +667,7 @@
 
         window.closeServiceModal = function() { document.getElementById('modal-service').classList.add('hidden'); };
 
-        window.saveService = function(event) {
+        window.saveService = async function(event) {
             event.preventDefault();
             if (isSaving) return;
             isSaving = true;
@@ -629,19 +701,19 @@
                 }
             }
 
-            window.saveDataToStorage(); 
+            await window.saveDataToStorage(); 
             window.renderCustomers(); 
             window.closeServiceModal(); 
             window.showToast("Đã lưu dịch vụ!");
             isSaving = false;
         };
 
-        window.deleteService = function(cId, sId) {
+        window.deleteService = async function(cId, sId) {
             if (confirm("Xóa dịch vụ này?")) {
                 const c = customers.find(x => x.id === cId);
                 if (c && c.services) {
                     c.services = c.services.filter(s => s.id !== sId);
-                    window.saveDataToStorage(); 
+                    await window.saveDataToStorage(); 
                     window.renderCustomers(); 
                     window.showToast("Đã xóa dịch vụ!");
                 }
@@ -776,12 +848,12 @@
             });
         };
 
-        window.markAsPaid = function(cId, sId) {
+        window.markAsPaid = async function(cId, sId) {
             const c = customers.find(x => x.id === cId);
             const s = c && c.services ? c.services.find(x => x.id === sId) : null;
             if (s) { 
                 s.isPaid = true; 
-                window.saveDataToStorage(); 
+                await window.saveDataToStorage(); 
                 window.renderDebtsTab(); 
                 window.renderCustomers(); 
                 window.showToast("Đã thanh toán nợ!"); 
@@ -801,9 +873,6 @@
                     document.querySelectorAll('.nav-text, .sidebar-label, .logo-text').forEach(el => el.classList.toggle('hidden'));
                 });
             }
-
-            window.renderCustomers();
-            window.updateDashboardStats();
         });
     </script>
 </body>
